@@ -1,0 +1,1 @@
+{"name":"Local: 3637_longest_rising_subsequence","url":"d:\\code\\xcpc\\lg\\dp\\3637_longest_rising_subsequence.cpp","tests":[{"id":1740320815635,"input":"6\n1 2 4 1 3 4","output":"4"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\code\\xcpc\\lg\\dp\\3637_longest_rising_subsequence.cpp","group":"local","local":true}

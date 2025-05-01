@@ -1,0 +1,1 @@
+{"name":"Local: lq_digitsjielong","url":"d:\\code\\xcpc\\kinds\\dfs\\lq_digitsjielong.cpp","tests":[{"id":1741434868046,"input":"3 3\n0 2 0\n1 1 1\n2 0 2","output":"41255214"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"d:\\code\\xcpc\\kinds\\dfs\\lq_digitsjielong.cpp","group":"local","local":true}
