@@ -121,12 +121,12 @@ void solve()
     for (int i = 0; i < q; i++)
     {
         int p = queries[i].first;
-        int v = queries[i].second;
+        int add = queries[i].second;
         // 先删除原本 arr[p] 在 BIT 中的贡献
         int id_old = getID(arr[p]);
         bit.update(id_old, -1);
         // 更新 arr[p]
-        arr[p] += v;
+        arr[p] += add;
         int id_new = getID(arr[p]);
         bit.update(id_new, 1);
 
