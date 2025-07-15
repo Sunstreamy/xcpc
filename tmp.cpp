@@ -8,13 +8,12 @@ const int M = 1e9 + 7;
 #define N 200005
 #define int long long
 
-struct fwt 
+struct fwt
 {
     int n;
     // 初始化一个可以容纳 n 个数据（外加一个额外索引）的树状数组
-    vector<int>
-        tree;
-    BIT(int n) : n(n), tree(n + 1, 0) {}
+    vi tree;
+    fwt(int n) : n(n), tree(n + 1, 0) {}
     // 单点更新：在位置 idx 加上 delta
     void update(int idx, int delta)
     {
