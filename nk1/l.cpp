@@ -3,19 +3,19 @@
 using namespace std;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
+typedef vector<vector<int>> vii;
 typedef bitset<20> b20;
 const int M = 1e9 + 7;
 #define N 200005
 #define int long long
 
 // 树状数组（BIT）模板：维护一个区间频率
-struct BIT
+struct fwt
 {
     int n;
     // 初始化一个可以容纳 n 个数据（外加一个额外索引）的树状数组
-    vector<int>
-        tree;
-    BIT(int n) : n(n), tree(n + 1, 0) {}
+    vi tree;
+    fwt(int n) : n(n), tree(n + 1, 0) {}
     // 单点更新：在位置 idx 加上 delta
     void update(int idx, int delta)
     {
@@ -49,7 +49,7 @@ struct BIT
     }
 };
 
-vector<int> discretize(vector<int> &all)
+vi discretize(vi &all)
 {
     sort(all.begin(), all.end());
     all.erase(unique(all.begin(), all.end()), all.end());
@@ -60,7 +60,7 @@ void solve()
 {
     int n, q;
     cin >> n >> q;
-    vector<int> arr(n);
+    vi arr(n);
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i];
@@ -68,7 +68,7 @@ void solve()
     // 为离散化构造所有可能出现的数值
     // 由于每次更新是累加，且数字只会增大，
     // 故所有初始值以及更新后的值都可能出现
-    vector<int> all;
+    vi all;
     // 放入初始数值
     for (int i = 0; i < n; i++)
     {
@@ -77,9 +77,9 @@ void solve()
 
     // 保存 q 次更新数据，以便离散化时加入更新后的值
     // 同时模拟更新（不改变 arr，只用于预计算所有可能数值）
-    vector<pair<int, int>> queries(q);
+    vector<pii> queries(q);
     // 用一个副本 cur 模拟更新过程，并记录每次新值
-    vector<int> cur = arr;
+    vi cur = arr;
     for (int i = 0; i < q; i++)
     {
         int p, v;
@@ -91,7 +91,7 @@ void solve()
     }
 
     // 离散化 all
-    vector<int> allVals = discretize(all);
+    vi allVals = discretize(all);
     int sz = allVals.size();
 
     // 辅助 lambda：给定数值 x 返回离散编号（1-indexed）
@@ -101,8 +101,7 @@ void solve()
         return id;
     };
 
-    // 构建 BIT，大小为 sz
-    BIT bit(sz);
+    fwt bit(sz);
     // 初始化 BIT：对每个 arr[i]将其离散编号位置加 1
     for (int i = 0; i < n; i++)
     {
