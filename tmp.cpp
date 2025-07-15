@@ -8,7 +8,7 @@ const int M = 1e9 + 7;
 #define N 200005
 #define int long long
 
-struct BIT
+struct fwt 
 {
     int n;
     // 初始化一个可以容纳 n 个数据（外加一个额外索引）的树状数组
