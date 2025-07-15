@@ -1,8 +1,8 @@
 //
 #include <bits/stdc++.h>
 using namespace std;
-typedef __int128_t i128;
 typedef pair<int, int> pii;
+typedef 
 typedef vector<int> vi;
 typedef bitset<20> b20;
 const int M = 1e9 + 7;
