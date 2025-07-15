@@ -12,9 +12,9 @@ const int M = 1e9 + 7;
 struct BIT
 {
     int n;
-    //初始化一个可以容纳 n 个数据（外加一个额外索引）的树状数组
-        vector<int>
-            tree;
+    // 初始化一个可以容纳 n 个数据（外加一个额外索引）的树状数组
+    vector<int>
+        tree;
     BIT(int n) : n(n), tree(n + 1, 0) {}
     // 单点更新：在位置 idx 加上 delta
     void update(int idx, int delta)
@@ -119,10 +119,7 @@ signed main()
             bit.update(id, 1);
         }
 
-        // 固定 n 不变，门槛 Tloss = n/2 (按照题目：输至少 ceil((n-1)/2) 场，即 n/2)
         int Tloss = n / 2;
-        // 条件：number x numb if losing count >= Tloss <=> (# numbers <= x) <= n - Tloss
-        // 记 r = n - Tloss
         int r = n - Tloss;
 
         // 下面每次更新后输出当前麻木数字个数。
