@@ -56,6 +56,94 @@ vector<int> discretize(vector<int> &all)
     return all;
 }
 
+void solve()
+{
+    int n, q;
+    cin >> n >> q;
+    vector<int> arr(n);
+    // 读取初始 n 数字
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arr[i];
+    }
+
+    // 为离散化构造所有可能出现的数值
+    // 由于每次更新是累加，且数字只会增大，
+    // 故所有初始值以及更新后的值都可能出现
+    vector<int> all;
+    // 放入初始数值
+    for (int i = 0; i < n; i++)
+    {
+        all.push_back(arr[i]);
+    }
+
+    // 保存 q 次更新数据，以便离散化时加入更新后的值
+    // 同时模拟更新（不改变 arr，只用于预计算所有可能数值）
+    vector<pair<int, int>> queries(q);
+    // 用一个副本 cur 模拟更新过程，并记录每次新值
+    vector<int> cur = arr;
+    for (int i = 0; i < q; i++)
+    {
+        int p, v;
+        cin >> p >> v;
+        p--; // 下标转换为 0-indexed
+        queries[i] = {p, v};
+        cur[p] += v;
+        all.push_back(cur[p]);
+    }
+
+    // 离散化 all
+    vector<int> allVals = discretize(all);
+    int sz = allVals.size();
+
+    // 辅助 lambda：给定数值 x 返回离散编号（1-indexed）
+    auto getID = [&](int x) -> int
+    {
+        int id = (lower_bound(allVals.begin(), allVals.end(), x) - allVals.begin()) + 1;
+        return id;
+    };
+
+    // 构建 BIT，大小为 sz
+    BIT bit(sz);
+    // 初始化 BIT：对每个 arr[i]将其离散编号位置加 1
+    for (int i = 0; i < n; i++)
+    {
+        int id = getID(arr[i]);
+        bit.update(id, 1);
+    }
+
+    int Tloss = n / 2;
+    int r = n - Tloss;
+
+    // 下面每次更新后输出当前麻木数字个数。
+    // 麻木数字定义：一个数字 x 是麻木当且仅当 BIT.query(getID(x)) <= r
+    // 我们将利用 BIT 进行二分——找到第一个离散下标 d0 使得 BIT.query(d0) >= r+1，
+    // 则所有离散编号 < d0 的数字完全计入麻木数字个数 (因为其前缀和 <= r)。
+    // 答案 = BIT.query(d0 - 1).（注意若 d0 = 1，则答案 = 0）
+
+    // 模拟 q 次更新
+    for (int i = 0; i < q; i++)
+    {
+        int p = queries[i].first;
+        int v = queries[i].second;
+        // 先删除原本 arr[p] 在 BIT 中的贡献
+        int id_old = getID(arr[p]);
+        bit.update(id_old, -1);
+        // 更新 arr[p]
+        arr[p] += v;
+        int id_new = getID(arr[p]);
+        bit.update(id_new, 1);
+
+        // 通过 BIT.lower_bound 找到最小离散编号 d0
+        int d0 = bit.lower_bound(r + 1);
+        int numbCount = 0;
+        // 如果 d0 > 1，则前 d0-1 离散值中的数字都肯定满足前缀和 <= r
+        numbCount = bit.query(d0 - 1);
+        // 输出当前“麻木”数字个数
+        cout << numbCount << "\n";
+    }
+}
+
 signed main()
 {
     ios::sync_with_stdio(false);
@@ -66,90 +154,7 @@ signed main()
     cin >> _;
     while (_--)
     {
-        int n, q;
-        cin >> n >> q;
-        vector<int> arr(n);
-        // 读取初始 n 数字
-        for (int i = 0; i < n; i++)
-        {
-            cin >> arr[i];
-        }
-
-        // 为离散化构造所有可能出现的数值
-        // 由于每次更新是累加，且数字只会增大，
-        // 故所有初始值以及更新后的值都可能出现
-        vector<int> all;
-        // 放入初始数值
-        for (int i = 0; i < n; i++)
-        {
-            all.push_back(arr[i]);
-        }
-
-        // 保存 q 次更新数据，以便离散化时加入更新后的值
-        // 同时模拟更新（不改变 arr，只用于预计算所有可能数值）
-        vector<pair<int, int>> queries(q);
-        // 用一个副本 cur 模拟更新过程，并记录每次新值
-        vector<int> cur = arr;
-        for (int i = 0; i < q; i++)
-        {
-            int p, v;
-            cin >> p >> v;
-            p--; // 下标转换为 0-indexed
-            queries[i] = {p, v};
-            cur[p] += v;
-            all.push_back(cur[p]);
-        }
-
-        // 离散化 all
-        vector<int> allVals = discretize(all);
-        int sz = allVals.size();
-
-        // 辅助 lambda：给定数值 x 返回离散编号（1-indexed）
-        auto getID = [&](int x) -> int
-        {
-            int id = (lower_bound(allVals.begin(), allVals.end(), x) - allVals.begin()) + 1;
-            return id;
-        };
-
-        // 构建 BIT，大小为 sz
-        BIT bit(sz);
-        // 初始化 BIT：对每个 arr[i]将其离散编号位置加 1
-        for (int i = 0; i < n; i++)
-        {
-            int id = getID(arr[i]);
-            bit.update(id, 1);
-        }
-
-        int Tloss = n / 2;
-        int r = n - Tloss;
-
-        // 下面每次更新后输出当前麻木数字个数。
-        // 麻木数字定义：一个数字 x 是麻木当且仅当 BIT.query(getID(x)) <= r
-        // 我们将利用 BIT 进行二分——找到第一个离散下标 d0 使得 BIT.query(d0) >= r+1，
-        // 则所有离散编号 < d0 的数字完全计入麻木数字个数 (因为其前缀和 <= r)。
-        // 答案 = BIT.query(d0 - 1).（注意若 d0 = 1，则答案 = 0）
-
-        // 模拟 q 次更新
-        for (int i = 0; i < q; i++)
-        {
-            int p = queries[i].first;
-            int v = queries[i].second;
-            // 先删除原本 arr[p] 在 BIT 中的贡献
-            int id_old = getID(arr[p]);
-            bit.update(id_old, -1);
-            // 更新 arr[p]
-            arr[p] += v;
-            int id_new = getID(arr[p]);
-            bit.update(id_new, 1);
-
-            // 通过 BIT.lower_bound 找到最小离散编号 d0
-            int d0 = bit.lower_bound(r + 1);
-            int numbCount = 0;
-            // 如果 d0 > 1，则前 d0-1 离散值中的数字都肯定满足前缀和 <= r
-            numbCount = bit.query(d0 - 1);
-            // 输出当前“麻木”数字个数
-            cout << numbCount << "\n";
-        }
+        solve();
     }
     return 0;
 }
