@@ -1,8 +1,11 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-
-// 为简化代码，将 int 定义为 long long
+typedef pair<int, int> pii;
+typedef vector<int> vi;
+typedef bitset<20> b20;
+const int M = 1e9 + 7;
+#define N 200005
 #define int long long
 
 // 树状数组（BIT）模板：维护一个区间频率
