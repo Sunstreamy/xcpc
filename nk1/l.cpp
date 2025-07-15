@@ -61,12 +61,10 @@ void solve()
     int n, q;
     cin >> n >> q;
     vector<int> arr(n);
-    // 读取初始 n 数字
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i];
     }
-
     // 为离散化构造所有可能出现的数值
     // 由于每次更新是累加，且数字只会增大，
     // 故所有初始值以及更新后的值都可能出现
