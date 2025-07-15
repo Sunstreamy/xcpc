@@ -49,11 +49,10 @@ struct fwt
     }
 };
 
-vi discretize(vi &all)
+void discretize(vi &all)
 {
     sort(all.begin(), all.end());
     all.erase(unique(all.begin(), all.end()), all.end());
-    return all;
 }
 
 void solve()
@@ -91,13 +90,13 @@ void solve()
     }
 
     // 离散化 all
-    vi allVals = discretize(all);
-    int sz = allVals.size();
+    discretize(all);
+    int sz = all.size();
 
     // 辅助 lambda：给定数值 x 返回离散编号（1-indexed）
     auto getID = [&](int x) -> int
     {
-        int id = (lower_bound(allVals.begin(), allVals.end(), x) - allVals.begin()) + 1;
+        int id = (lower_bound(all.begin(), all.end(), x) - all.begin()) + 1;
         return id;
     };
 
