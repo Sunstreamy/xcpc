@@ -4,7 +4,7 @@ using namespace std;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
 typedef bitset<20> b20;
-const int M = 1e9 + 7;
+const int m = 1e9 + 7;
 #define N 200005
 #define int long long
 
