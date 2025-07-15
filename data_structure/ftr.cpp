@@ -5,8 +5,42 @@ typedef __int128_t i128;
 typedef pair<int, int> PII;
 typedef vector<int> VI;
 const int M = 1e9 + 7;
-#define N 20000
+#define N 200005
 #define int long long
+struct BIT {
+    int n;
+    // 用于存储区间频率
+    vector<int> tree;
+    BIT(int n) : n(n), tree(n + 1, 0) {}
+    
+    // 单点更新：在位置 idx 加上 delta
+    void update(int idx, int delta) {
+        for (; idx <= n; idx += idx & -idx)
+            tree[idx] += delta;
+    }
+    
+    // 前缀和查询：查询区间 [1, idx] 内的和
+    int query(int idx) {
+        int sum = 0;
+        for (; idx; idx -= idx & -idx)
+            sum += tree[idx];
+        return sum;
+    }
+    
+    // 二分查找：返回最小的 idx 使得 query(idx) >= target
+    int lower_bound(int target) {
+        int idx = 0;
+        // 这里取足够大的最高位（2^20=1048576即可，保证 n 不超过 5e5）
+        for (int bit = 1 << 20; bit; bit >>= 1) {
+            int next = idx + bit;
+            if (next <= n && tree[next] < target) {
+                target -= tree[next];
+                idx = next;
+            }
+        }
+        return idx + 1;
+    }
+};
 
 void solve()
 {
