@@ -2,7 +2,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 typedef pair<int, int> pii;
-typedef 
 typedef vector<int> vi;
 typedef bitset<20> b20;
 const int M = 1e9 + 7;
