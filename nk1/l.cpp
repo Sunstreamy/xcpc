@@ -59,11 +59,12 @@ vector<int> discretize(vector<int> &all)
 signed main()
 {
     ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    cin.tie(0);
+    cout.tie(0);
 
-    int T;
-    cin >> T;
-    while (T--)
+    int _;
+    cin >> _;
+    while (_--)
     {
         int n, q;
         cin >> n >> q;
