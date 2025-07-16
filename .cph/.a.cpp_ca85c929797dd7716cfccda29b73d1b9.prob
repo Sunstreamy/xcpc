@@ -1,1 +1,0 @@
-{"name":"Local: a","url":"/home/sunstreamy/code/xcpx/a.cpp","tests":[{"id":1752314208172,"input":"2  3  4  1  5  x  7  6  8\n","output":"ullddrurdllurdruldr\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/sunstreamy/code/xcpx/a.cpp","group":"local","local":true}
