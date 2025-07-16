@@ -1,22 +1,14 @@
+//
 #include <bits/stdc++.h>
 using namespace std;
-typedef pair<long long, long long> pii;
-typedef vector<long long> vi;
-typedef vector<vector<long long>> vii;
+typedef pair<int, int> pii;
+typedef vector<int> vi;
+typedef vector<vector<int>> vii;
 typedef vector<string> vs;
 typedef bitset<20> b20;
 const int M = 1e9 + 7;
 #define N 200005
 #define int long long
-inline void rd(int &rex) // 读入优化
-{
-    rex = 0;
-    char c = getchar();
-    while (c < '0' || c > '9')
-        c = getchar();
-    while (c >= '0' && c <= '9')
-        rex = rex * 10 + c - '0', c = getchar();
-}
 
 struct fwt
 {
@@ -56,11 +48,47 @@ struct fwt
         return idx + 1;
     }
 };
+vs grid;
+int r, c;
+int dx[] = {-1, 0, 1, 0};
+int dy[] = {0, 1, 0, -1};
 
-//------------------------------------------------------------------
-
-inline void solve()
+void bfs()
 {
+    queue<pii> q;
+    q.push({0, 0});
+    grid[0][0] = '#';
+    while (!q.empty())
+    {
+        auto [x, y] = q.front();
+        q.pop();
+        if (x == r - 1 && y == c - 1)
+        {
+            cout << "Yes" << '\n';
+            return;
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            int nx = x + dx[i], ny = y + dy[i];
+            if (nx >= 0 && nx < r && ny >= 0 && ny < c && grid[nx][ny] == '.')
+            {
+                q.push({nx, ny});
+                grid[nx][ny] = '#';
+            }
+        }
+    }
+    cout << "No" << '\n';
+}
+
+void solve()
+{
+    cin >> r >> c;
+    grid.resize(r);
+    for (int i = 0; i < r; i++)
+    {
+        cin >> grid[i];
+    }
+    bfs();
 }
 
 signed main()

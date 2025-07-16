@@ -1,22 +1,14 @@
+//
 #include <bits/stdc++.h>
 using namespace std;
-typedef pair<long long, long long> pii;
-typedef vector<long long> vi;
-typedef vector<vector<long long>> vii;
+typedef pair<int, int> pii;
+typedef vector<int> vi;
+typedef vector<vector<int>> vii;
 typedef vector<string> vs;
 typedef bitset<20> b20;
 const int M = 1e9 + 7;
 #define N 200005
 #define int long long
-inline void rd(int &rex) // 读入优化
-{
-    rex = 0;
-    char c = getchar();
-    while (c < '0' || c > '9')
-        c = getchar();
-    while (c >= '0' && c <= '9')
-        rex = rex * 10 + c - '0', c = getchar();
-}
 
 struct fwt
 {
@@ -57,10 +49,43 @@ struct fwt
     }
 };
 
-//------------------------------------------------------------------
+int r, c;
+int cnt;
+vs grid;
+int dx[8] = {1, 1, 0, -1, -1, -1, 0, 1};
+int dy[8] = {0, 1, 1, 1, 0, -1, -1, -1};
 
-inline void solve()
+void dfs(int x, int y)
 {
+    grid[x][y] = '*';
+    for (int i = 0; i < 8; i++)
+    {
+        int nx = x + dx[i], ny = y + dy[i];
+
+        if (nx >= 0 && nx < r && ny >= 0 && grid[nx][ny] == '@')
+        {
+            dfs(nx, ny);
+        }
+    }
+}
+
+void solve()
+{
+    for (int i = 0; i < r; i++)
+    {
+        cin >> grid[i];
+    }
+    cnt = 0;
+    for (int i = 0; i < r; i++)
+        for (int j = 0; j < c; j++)
+        {
+            if (grid[i][j] == '@')
+            {
+                dfs(i, j);
+                cnt += 1;
+            }
+        }
+    cout << cnt << '\n';
 }
 
 signed main()
@@ -68,7 +93,11 @@ signed main()
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    solve();
+    while (cin >> r >> c && r)
+    {
+        grid.resize(r);
+        solve();
+    }
 
     return 0;
 }
