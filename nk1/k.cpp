@@ -1,154 +1,123 @@
-//
-#include <bits/stdc++.h>
-using namespace std;
-typedef pair<int, int> pii;
-typedef vector<int> vi;
-typedef bitset<20> b20;
-const int M = 1e9 + 7;
-#define N 200005
-#define int long long
+#include <iostream>
+#include <vector>
+#include <map>
+#include <set>
+#include <utility>
+#include <algorithm>
 
-// 树状数组（BIT）模板：维护一个区间频率
-struct BIT
+int main()
 {
+    // 使用快速I/O
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+
     int n;
-    // 初始化一个可以容纳 n 个数据（外加一个额外索引）的树状数组
-    vector<int>
-        tree;
-    BIT(int n) : n(n), tree(n + 1, 0) {}
-    // 单点更新：在位置 idx 加上 delta
-    void update(int idx, int delta)
+    std::cin >> n;
+
+    // 邻接表: adj[u][k-1] 代表从u房走k号门(1-based)到达的房间
+    std::vector<std::vector<int>> adj(n + 1);
+    for (int u = 1; u <= n; ++u)
     {
-        for (; idx <= n; idx += idx & -idx)
-            tree[idx] += delta;
-    }
-    // 前缀和查询：查询区间 [1, idx] 内的和
-    int query(int idx)
-    {
-        int sum = 0;
-        for (; idx; idx -= idx & -idx)
-            sum += tree[idx];
-        return sum;
-    }
-    // 二分查找：返回最小的 idx 使得 query(idx) >= target
-    int lower_bound(int target)
-    {
-        int idx = 0;
-        // 假设 n 不超过 2*10^5+q总数可能接近 5e5
-        // 所以取足够大的最高位（2^20=1048576即可）
-        for (int bit = 1 << 20; bit; bit >>= 1)
+        int d;
+        std::cin >> d;
+        adj[u].resize(d);
+        for (int i = 0; i < d; ++i)
         {
-            int next = idx + bit;
-            if (next <= n && tree[next] < target)
+            std::cin >> adj[u][i];
+        }
+    }
+
+    // --- 【关键修正】正确地构建反向查找表 ---
+    // reverse_label_map[{v, u}] 的值是：在房间v，通往房间u的那扇门的门牌号(1-based)
+    std::map<std::pair<int, int>, int> reverse_label_map;
+    for (int v = 1; v <= n; ++v)
+    { // 遍历每个房间 v
+        for (size_t i = 0; i < adj[v].size(); ++i)
+        {                      // 遍历 v 的所有门
+            int u = adj[v][i]; // 从 v 通过 i+1 号门可以到达 u
+            // 所以，在房间v，通往u的门是 i+1 号
+            reverse_label_map[{v, u}] = i + 1;
+        }
+    }
+
+    // 记忆化存储: 记录每条有向边 {u, v} 所在环的最终答案
+    std::map<std::pair<int, int>, int> results;
+
+    // 遍历所有可能的有向边，找出它们所在的环并计算结果
+    for (int i = 1; i <= n; ++i)
+    {
+        for (int neighbor : adj[i])
+        {
+
+            // 如果这条边已经属于一个计算过的环，就跳过
+            if (results.count({i, neighbor}))
             {
-                target -= tree[next];
-                idx = next;
+                continue;
+            }
+
+            // 发现一个新环的起点，开始追踪
+            std::vector<std::pair<int, int>> cycle_path_edges;
+            int current_u = i;
+            int current_v = neighbor;
+
+            while (!results.count({current_u, current_v}))
+            {
+                // 标记这条边正在访问
+                results[{current_u, current_v}] = -1; // -1作为临时标记
+                cycle_path_edges.push_back({current_u, current_v});
+
+                // --- 核心行走逻辑 ---
+                int prev_u = current_u;
+                int next_u = current_v;
+
+                // 1. 在当前房间(next_u)，找到我们刚进来的门(通往prev_u)的标签
+                int incoming_label = reverse_label_map.at({next_u, prev_u});
+
+                // 2. 根据规则确定下一扇要走的门的标签
+                int num_doors = adj[next_u].size();
+                int outgoing_label = (incoming_label == num_doors) ? 1 : incoming_label + 1;
+
+                // 3. 找到下一个房间
+                int next_v = adj[next_u][outgoing_label - 1]; // 标签-1得到0-based索引
+
+                // 更新状态，准备下一次迭代
+                current_u = next_u;
+                current_v = next_v;
+            }
+
+            // --- 环已完整追踪 ---
+
+            // 4. 计算环上【不同走廊】的数量
+            std::set<std::pair<int, int>> unique_corridors;
+            for (const auto &edge : cycle_path_edges)
+            {
+                int u1 = edge.first;
+                int u2 = edge.second;
+                // 将无向边标准化，方便去重 (例如 1-4 和 4-1 是同一条)
+                if (u1 > u2)
+                {
+                    std::swap(u1, u2);
+                }
+                unique_corridors.insert({u1, u2});
+            }
+            int final_answer = unique_corridors.size();
+
+            // 5. 将最终答案存入这个环上的每一条有向边
+            for (const auto &edge : cycle_path_edges)
+            {
+                results[edge] = final_answer;
             }
         }
-        return idx + 1;
     }
-};
 
-vector<int> discretize(vector<int> &all)
-{
-    sort(all.begin(), all.end());
-    all.erase(unique(all.begin(), all.end()), all.end());
-    return all;
-}
-
-signed main()
-{
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    int T;
-    cin >> T;
-    while (T--)
+    // 6. 输出所有结果
+    for (int i = 1; i <= n; ++i)
     {
-        int n, q;
-        cin >> n >> q;
-        vector<int> arr(n);
-        // 读取初始 n 数字
-        for (int i = 0; i < n; i++)
-        {
-            cin >> arr[i];
-        }
-
-        // 为离散化构造所有可能出现的数值
-        // 由于每次更新是累加，且数字只会增大，
-        // 故所有初始值以及更新后的值都可能出现
-        vector<int> all;
-        // 放入初始数值
-        for (int i = 0; i < n; i++)
-        {
-            all.push_back(arr[i]);
-        }
-
-        // 保存 q 次更新数据，以便离散化时加入更新后的值
-        // 同时模拟更新（不改变 arr，只用于预计算所有可能数值）
-        vector<pair<int, int>> queries(q);
-        // 用一个副本 cur 模拟更新过程，并记录每次新值
-        vector<int> cur = arr;
-        for (int i = 0; i < q; i++)
-        {
-            int p, v;
-            cin >> p >> v;
-            p--; // 下标转换为 0-indexed
-            queries[i] = {p, v};
-            cur[p] += v;
-            all.push_back(cur[p]);
-        }
-
-        // 离散化 all
-        vector<int> allVals = discretize(all);
-        int sz = allVals.size();
-
-        // 辅助 lambda：给定数值 x 返回离散编号（1-indexed）
-        auto getID = [&](int x) -> int
-        {
-            int id = (lower_bound(allVals.begin(), allVals.end(), x) - allVals.begin()) + 1;
-            return id;
-        };
-
-        // 构建 BIT，大小为 sz
-        BIT bit(sz);
-        // 初始化 BIT：对每个 arr[i]将其离散编号位置加 1
-        for (int i = 0; i < n; i++)
-        {
-            int id = getID(arr[i]);
-            bit.update(id, 1);
-        }
-
-        int Tloss = n / 2;
-        int r = n - Tloss;
-
-        // 下面每次更新后输出当前麻木数字个数。
-        // 麻木数字定义：一个数字 x 是麻木当且仅当 BIT.query(getID(x)) <= r
-        // 我们将利用 BIT 进行二分——找到第一个离散下标 d0 使得 BIT.query(d0) >= r+1，
-        // 则所有离散编号 < d0 的数字完全计入麻木数字个数 (因为其前缀和 <= r)。
-        // 答案 = BIT.query(d0 - 1).（注意若 d0 = 1，则答案 = 0）
-
-        // 模拟 q 次更新
-        for (int i = 0; i < q; i++)
-        {
-            int p = queries[i].first;
-            int v = queries[i].second;
-            // 先删除原本 arr[p] 在 BIT 中的贡献
-            int id_old = getID(arr[p]);
-            bit.update(id_old, -1);
-            // 更新 arr[p]
-            arr[p] += v;
-            int id_new = getID(arr[p]);
-            bit.update(id_new, 1);
-
-            // 通过 BIT.lower_bound 找到最小离散编号 d0
-            int d0 = bit.lower_bound(r + 1);
-            int numbCount = 0;
-            // 如果 d0 > 1，则前 d0-1 离散值中的数字都肯定满足前缀和 <= r
-            numbCount = bit.query(d0 - 1);
-            // 输出当前“麻木”数字个数
-            cout << numbCount << "\n";
-        }
+        // 从房间i出发，总是走1号门
+        int neighbor_v = adj[i][0];
+        // 直接从我们计算好的结果中查找并输出
+        std::cout << results.at({i, neighbor_v}) << "\n";
     }
+
     return 0;
 }
