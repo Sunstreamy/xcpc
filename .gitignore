@@ -1,3 +1,30 @@
+# 忽略 VS Code 工作区用户设置
+.vscode/settings.json
+
+# 忽略 VS Code 配置文件夹 (如果需要，通常在根目录)
 /.vscode/
-/build/
-/.cph/
+
+# 忽略编译产物文件夹
+build/
+
+# 忽略所有层级下的 .cph 文件夹及其内容 (如果您有这样的文件夹)
+**/.cph/
+
+# 忽略所有以 .cph 结尾的文件 (这是针对您当前看到的这种文件)
+*.cph
+
+# 忽略 CPH 可能生成的临时文件（通常是 .prob 或带有长哈希值的 .cpp 文件）
+*.prob
+*_*_*.cpp_*
+
+# 忽略 macOS 调试符号目录
+*.dSYM/
+
+# 忽略常见的编译生成文件
+*.bin
+test
+a.out
+*.exe
+*.o
+*.swp
+*~
