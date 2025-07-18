@@ -34,9 +34,15 @@ struct fwt
     int lower_bound(int target)
     {
         int idx = 0;
-        // 假设 n 不超过 2*10^5+q总数可能接近 5e5
-        // 所以取足够大的最高位（2^20=1048576即可）
-        for (int bit = 1 << 20; bit; bit >>= 1)
+        // 动态计算最高位的2的幂
+        int max_pow_of_2 = 1;
+        while (max_pow_of_2 <= n)
+        {
+            max_pow_of_2 <<= 1;
+        }
+        max_pow_of_2 >>= 1; // 现在是小于等于n的最大2的幂
+
+        for (int bit = max_pow_of_2; bit; bit >>= 1)
         {
             int next = idx + bit;
             if (next <= n && tree[next] < target)
