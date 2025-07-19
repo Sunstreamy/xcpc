@@ -115,8 +115,83 @@ struct fwt
 
 //------------------------------------------------------------------
 
+int r, c;
+vs grid;
+vll ft;
+vll jt;
+int dx[4] = {0, 1, 0, -1};
+int dy[4] = {1, 0, -1, 0};
+
 void solve()
 {
+    cin >> r >> c;
+
+    grid.resize(r);
+    jt.assign(r, vl(c, INF));
+    ft.assign(r, vl(c, INF));
+
+    queue<pll> fq;
+    queue<pll> jq;
+    pll posj;
+
+    for (int i = 0; i < r; i++)
+    {
+        cin >> grid[i];
+        for (int j = 0; j < c; j++)
+        {
+            if (grid[i][j] == 'F')
+            {
+                ft[i][j] = 0;
+                fq.push({i, j});
+            }
+            else if (grid[i][j] == 'J')
+            {
+                posj = {i, j};
+                jt[i][j] = 0;
+                jq.push({i, j});
+            }
+        }
+    }
+    while (!fq.empty())
+    {
+        auto [cx, cy] = fq.front();
+        fq.pop();
+        for (int i = 0; i < 4; i++)
+        {
+            int nx = cx + dx[i], ny = cy + dy[i];
+            if (nx < 0 || nx >= r || ny < 0 || ny >= c || grid[nx][ny] == '#' || ft[nx][ny] != INF)
+            {
+                continue;
+            }
+            ft[nx][ny] = ft[cx][cy] + 1;
+            fq.push({nx, ny});
+        }
+    }
+    bool ok = false;
+    int ans = -1;
+    while (!jq.empty())
+    {
+        auto [cx, cy] = jq.front();
+        jq.pop();
+        if (cx == 0 || cx == r - 1 || cy == 0 || cy == c - 1)
+        {
+            ok = true;
+            ans = jt[cx][cy] + 1;
+            break;
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            int nx = cx + dx[i], ny = cy + dy[i];
+            if (nx < 0 || nx >= r || ny < 0 || ny >= c || grid[nx][ny] == '#' || jt[nx][ny] != INF || jt[cx][cy] + 1 >= ft[nx][ny])
+                continue;
+            jt[nx][ny] = jt[cx][cy] + 1;
+            jq.push({nx, ny});
+        }
+    }
+    if (ok)
+        cout << ans << '\n';
+    else
+        cout << "IMPOSSIBLE" << '\n';
 }
 
 signed main()
@@ -124,7 +199,12 @@ signed main()
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    solve();
+    int _;
+    cin >> _;
+    while (_--)
+    {
+        solve();
+    }
 
     return 0;
 }
