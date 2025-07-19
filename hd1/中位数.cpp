@@ -93,11 +93,8 @@ inline void solve()
         // 前缀和 s[i] 的范围是 [-n, n]。为了用数组下标，我们加上偏移量 n。
         // 数组大小设为 2*n+5 以确保安全。
         int offset = n;
-        vi sum_i_even(2 * n + 5, 0); // i-1 为偶数时, i 的和
-        vi sum_i_odd(2 * n + 5, 0);  // i-1 为奇数时, i 的和
-
-        vi sum_j_even(2 * n + 5, 0); // j 为偶数时, j 的和
-        vi sum_j_odd(2 * n + 5, 0);  // j 为奇数时, j 的和
+        vi s_i(2 * n + 5, 0);
+        vi s_j(2 * n + 5, 0);
 
         // 3. 计算左半部分 (i 的贡献)
         // 遍历所有可能的 i-1 (记为 x), 范围是 [0, k-1]
@@ -105,14 +102,7 @@ inline void solve()
         for (int x = 0; x < k; ++x)
         {
             int s_val_idx = s[x] + offset;
-            if (x % 2 == 0)
-            {
-                sum_i_even[s_val_idx] += (x + 1);
-            }
-            else
-            { 
-                sum_i_odd[s_val_idx] += (x + 1);
-            }
+            s_i[s_val_idx] += x + 1;
         }
 
         // 4. 计算右半部分 (j 的贡献)
@@ -120,14 +110,7 @@ inline void solve()
         for (int j = k; j <= n; ++j)
         {
             int s_val_idx = s[j] + offset;
-            if (j % 2 == 0)
-            { 
-                sum_j_even[s_val_idx] += j;
-            }
-            else
-            { 
-                sum_j_odd[s_val_idx] += j;
-            }
+            s_j[s_val_idx] += j;
         }
 
         // 5. 组合计算对答案的贡献
@@ -136,16 +119,8 @@ inline void solve()
         for (int s_val = -n; s_val <= n; ++s_val)
         {
             int s_val_idx = s_val + offset;
-
-            // 条件: s[i-1] == s[j] 且 i-1 和 j 的奇偶性不同
-
-            // Case 1: i-1 是偶数, j 是奇数
-            current_k_contrib += sum_i_even[s_val_idx] * sum_j_odd[s_val_idx];
-
-            // Case 2: i-1 是奇数, j 是偶数
-            current_k_contrib += sum_i_odd[s_val_idx] * sum_j_even[s_val_idx];
+            current_k_contrib += s_j[s_val_idx] * s_i[s_val_idx];
         }
-
         ans += median_val * current_k_contrib;
     }
 
