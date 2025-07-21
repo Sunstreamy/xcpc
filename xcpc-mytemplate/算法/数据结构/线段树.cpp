@@ -2,7 +2,7 @@
  *    2022-04-23: https://codeforces.com/contest/1672/submission/154766851
 **/
 template<class Info,
-    class Merge = std::plus<Info>>
+    class Merge = std::plus<Info> >
 struct SegmentTree {
     const int n;
     const Merge merge;
