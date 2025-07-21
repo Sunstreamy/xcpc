@@ -5,7 +5,7 @@
 /.vscode/
 
 #忽略大佬的板子
-/.xcpc-algorithm-templates/
+/xcpc-algorithm-templates/
 
 # 忽略编译产物文件夹
 build/
