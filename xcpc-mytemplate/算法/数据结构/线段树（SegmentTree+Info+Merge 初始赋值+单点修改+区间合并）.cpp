@@ -3,8 +3,17 @@
 **/
 #include <bits/stdc++.h>
 using namespace std;
+
+struct Node
+{
+};
 struct Nodemerge
 {
+    Node res;
+    Node opertor()()
+    {
+    }
+    return res;
 };
 template <class Info, class Merge = plus<Info>>
 struct SegmentTree
