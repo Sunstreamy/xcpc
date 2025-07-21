@@ -20,8 +20,16 @@ build/
 *.prob
 *_*_*.cpp_*
 
-# 忽略 macOS 调试符号目录
+# =========================
+# macOS specific files
+# =========================
 *.dSYM/
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
 
 # 忽略常见的编译生成文件
 *.bin
