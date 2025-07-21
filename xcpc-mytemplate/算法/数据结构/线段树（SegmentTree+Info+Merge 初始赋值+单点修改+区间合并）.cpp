@@ -2,17 +2,17 @@
     线段树（SegmentTree+Info+Merge 初始赋值+单点修改+区间合并）
 **/
 #include <bits/stdc++.h>
-template <class Info,
-          class Merge = std::plus<Info>>
+using namespace std;
+template <class Info, class Merge = plus<Info>>
 struct SegmentTree
 {
     const int n;
     const Merge merge;
-    std::vector<Info> info;
-    SegmentTree(int n) : n(n), merge(Merge()), info(4 << std::__lg(n)) {}
-    SegmentTree(std::vector<Info> init) : SegmentTree(init.size())
+    vector<Info> info;
+    SegmentTree(int n) : n(n), merge(Merge()), info(4 << __lg(n)) {}
+    SegmentTree(vector<Info> init) : SegmentTree(init.size())
     {
-        std::function<void(int, int, int)> build = [&](int p, int l, int r)
+        function<void(int, int, int)> build = [&](int p, int l, int r)
         {
             if (r - l == 1)
             {
