@@ -3,14 +3,17 @@
 **/
 #include <bits/stdc++.h>
 using namespace std;
+struct Nodemerge
+{
+};
 template <class Info, class Merge = plus<Info>>
 struct SegmentTree
 {
     const int n;
     const Merge merge;
     vector<Info> info;
-    //merge(...) 看起来像在调用一个方法，但实际上是在使用一个成员变量（一个对象） 的 operator() 功能。
-        SegmentTree(int n) : n(n), merge(Merge()), info(4 << __lg(n)) {}
+    // merge(...) 看起来像在调用一个方法，但实际上是在使用一个成员变量（一个对象） 的 operator() 功能。
+    SegmentTree(int n) : n(n), merge(Merge()), info(4 << __lg(n)) {}
     SegmentTree(vector<Info> init) : SegmentTree(init.size())
     {
         function<void(int, int, int)> build = [&](int p, int l, int r)
