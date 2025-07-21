@@ -87,138 +87,43 @@ vl dijkstra(int N, const vector<vector<pll>> &adj, int start_node)
     return dist;
 }
 
-// 1-based
+// 0-based
 struct fwt
 {
     int n;
     vl tree;
     fwt(int size) : n(size), tree(size + 1, 0) {}
 
-    // 单点更新：在位置 idx 加上 delta (idx 是 1-based)
+    // 单点更新：在位置 idx 加上 delta (idx 是 0-based)
     void update(int idx, int delta)
     {
-        // 外部传入的 idx 已经是 1-based，直接使用
-        for (; idx <= n; idx += idx & -idx)
+        for (++idx; idx <= n; idx += idx & -idx)
             tree[idx] += delta;
     }
 
-    // 前缀和查询：查询区间 [1, idx] 内的和 (idx 是 1-based)
+    // 前缀和查询：查询区间 [0, idx] 内的和 (idx 是 0-based)
     int query(int idx)
     {
-        // 如果 idx < 1, 循环不会执行，自动返回 0
+        if (idx < 0)
+            return 0;
         int sum = 0;
-        // 外部传入的 idx 已经是 1-based，直接使用
-        for (; idx > 0; idx -= idx & -idx)
+        for (++idx; idx > 0; idx -= idx & -idx)
             sum += tree[idx];
         return sum;
-    }
-    
-    // (可选的) 辅助函数：查询区间 [l, r] 的和
-    int query_range(int l, int r) {
-        if (l > r) return 0;
-        return query(r) - query(l - 1);
-    }
-};
-
-// 默认功能：区间求和，单点修改
-// 使用 1-based 索引
-struct segtrnode
-{
-    ll sum;
-    // 如果需要其他信息（如最大/最小值），在这里添加
-    // ll max_val;
-};
-
-struct segtr
-{
-    int n;
-    vector<segtrnode> tree;
-    vector<ll> &arr;
-
-    segtr(int size, vector<ll> &data) : n(size), arr(data)
-    {
-        tree.resize(4 * n + 5);
-        if (n > 0)
-            build(1, 1, n);
-    }
-
-    void push_up(int u)
-    {
-        tree[u].sum = tree[u << 1].sum + tree[u << 1 | 1].sum;
-    }
-
-    void build(int u, int l, int r)
-    {
-        if (l == r)
-        {
-            tree[u] = {arr[l]};
-            return;
-        }
-        int m = (l + r) >> 1;
-        build(u << 1, l, m);
-        build(u << 1 | 1, m + 1, r);
-        push_up(u);
-    }
-
-    void update(int u, int l, int r, int pos, ll val)
-    {
-        if (l == r)
-        {
-            tree[u] = {val};
-            arr[pos] = val; // 同步更新原数组
-            return;
-        }
-        int m = (l + r) >> 1;
-        if (pos <= m)
-        {
-            update(u << 1, l, m, pos, val);
-        }
-        else
-        {
-            update(u << 1 | 1, m + 1, r, pos, val);
-        }
-        push_up(u);
-    }
-
-    segtrnode query(int u, int l, int r, int ql, int qr)
-    {
-        if (ql <= l && r <= qr)
-        {
-            return tree[u];
-        }
-        int m = (l + r) >> 1;
-        if (qr <= m)
-        {
-            return query(u << 1, l, m, ql, qr);
-        }
-        else if (ql > m)
-        {
-            return query(u << 1 | 1, m + 1, r, ql, qr);
-        }
-        else
-        {
-            segtrnode left_res = query(u << 1, l, m, ql, qr);
-            segtrnode right_res = query(u << 1 | 1, m + 1, r, ql, qr);
-            return {left_res.sum + right_res.sum};
-        }
-    }
-
-    // 公共接口
-    void update(int pos, ll val)
-    {
-        update(1, 1, n, pos, val);
-    }
-
-    ll query(int l, int r)
-    {
-        return query(1, 1, n, l, r).sum;
     }
 };
 
 //------------------------------------------------------------------
+int mygcd(int x, int y)
+{
+    return y ? mygcd(y, x % y) : x;
+}
 
 void solve()
 {
+    int a, b;
+    rd(a), rd(b);
+    cout << mygcd(a, b);
 }
 
 signed main()

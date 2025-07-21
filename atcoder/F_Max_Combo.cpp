@@ -6,6 +6,7 @@ typedef vector<ll> vl;
 typedef vector<pair<ll, ll>> vpll;
 typedef vector<vector<ll>> vll;
 typedef vector<string> vs;
+typedef vector<char> vc;
 typedef bitset<20> b20;
 #define int long long
 
@@ -112,10 +113,12 @@ struct fwt
             sum += tree[idx];
         return sum;
     }
-    
+
     // (可选的) 辅助函数：查询区间 [l, r] 的和
-    int query_range(int l, int r) {
-        if (l > r) return 0;
+    int query_range(int l, int r)
+    {
+        if (l > r)
+            return 0;
         return query(r) - query(l - 1);
     }
 };
@@ -124,18 +127,42 @@ struct fwt
 // 使用 1-based 索引
 struct segtrnode
 {
-    ll sum;
-    // 如果需要其他信息（如最大/最小值），在这里添加
-    // ll max_val;
+    ll v;
+    ll lenl;
+    ll lenr;
+    char lc;
+    char rc;
+    int len;
 };
+segtrnode merge(segtrnode &l, segtrnode &r)
+{
+    if (l.lc == 0)
+        return r;
+    if (r.lc == 0)
+        return l;
+    segtrnode res;
+    res.len = l.len + r.len;
+    res.lc = l.lc, res.rc = r.rc;
+    res.lenl = l.lenl, res.lenr = r.lenr;
+    res.v = max(l.v, r.v);
+    if (r.lc == l.rc)
+    {
+        res.v = max(res.v, l.lenr + r.lenl);
+        if (l.lenl == l.len)
+            res.lenl += r.lenl;
+        if (r.lenr == r.len)
+            res.lenr += l.lenr;
+    }
+    return res;
+}
 
 struct segtr
 {
     int n;
     vector<segtrnode> tree;
-    vector<ll> &arr;
+    vector<char> &arr;
 
-    segtr(int size, vector<ll> &data) : n(size), arr(data)
+    segtr(int size, vector<char> &data) : n(size), arr(data)
     {
         tree.resize(4 * n + 5);
         if (n > 0)
@@ -144,14 +171,15 @@ struct segtr
 
     void push_up(int u)
     {
-        tree[u].sum = tree[u << 1].sum + tree[u << 1 | 1].sum;
+        tree[u] = merge(tree[u << 1], tree[u << 1 | 1]); // 编号为 u 的员工，他的左侧直属下属的编号永远是 2*u，右侧直属下属的编号永远是 2*u+1”。
     }
 
     void build(int u, int l, int r)
     {
+        tree[u].len = r - l + 1; // 初始化len
         if (l == r)
         {
-            tree[u] = {arr[l]};
+            tree[u] = {1, 1, 1, arr[l], arr[l], 1};
             return;
         }
         int m = (l + r) >> 1;
@@ -160,11 +188,11 @@ struct segtr
         push_up(u);
     }
 
-    void update(int u, int l, int r, int pos, ll val)
+    void update(int u, int l, int r, int pos, char val)
     {
         if (l == r)
         {
-            tree[u] = {val};
+            tree[u] = {1, 1, 1, val, val, 1};
             arr[pos] = val; // 同步更新原数组
             return;
         }
@@ -199,26 +227,56 @@ struct segtr
         {
             segtrnode left_res = query(u << 1, l, m, ql, qr);
             segtrnode right_res = query(u << 1 | 1, m + 1, r, ql, qr);
-            return {left_res.sum + right_res.sum};
+            return merge(left_res, right_res);
         }
     }
 
     // 公共接口
-    void update(int pos, ll val)
+    void update(int pos, char val)
     {
         update(1, 1, n, pos, val);
     }
 
     ll query(int l, int r)
     {
-        return query(1, 1, n, l, r).sum;
+        if (l > r)
+            return 0;
+        return query(1, 1, n, l, r).v;
     }
 };
 
 //------------------------------------------------------------------
+ll n, q;
+string s;
 
 void solve()
 {
+    cin >> n >> q;
+    cin >> s;
+    vc a(n + 1);
+    for (int i = 0; i < n; i++)
+    {
+        a[i + 1] = s[i];
+    }
+    segtr tr(n, a);
+    for (int i = 0; i < q; i++)
+    {
+        int op;
+        cin >> op;
+        if (op == 1)
+        {
+            int pos;
+            char c;
+            cin >> pos >> c;
+            tr.update(pos, c);
+        }
+        else
+        {
+            int l, r;
+            cin >> l >> r;
+            cout << tr.query(l, r) << '\n';
+        }
+    }
 }
 
 signed main()
