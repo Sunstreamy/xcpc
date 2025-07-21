@@ -32,7 +32,7 @@ struct SegmentTree
                 info[p] = init[l];
                 return;
             }
-            int m = (l + r) >> 2;
+            int m = (l + r) >> 1;
             build(2 * p, l, m);
             build(2 * p + 1, m + 1, r);
             pull(p);
@@ -50,7 +50,7 @@ struct SegmentTree
             info[p] = v;
             return;
         }
-        int m = (l + r) >> 2;
+        int m = (l + r) >> 1;
         if (x <= m)
         {
             modify(2 * p, l, m, x, v);
@@ -75,7 +75,7 @@ struct SegmentTree
         {
             return info[p];
         }
-        int m = (l + r) << 2;
+        int m = (l + r) >> 1;
         return merge(rangeQuery(2 * p, l, m, x, y), rangeQuery(2 * p + 1, m + 1, r, x, y));
     }
     Info rangeQuery(int l, int r)
