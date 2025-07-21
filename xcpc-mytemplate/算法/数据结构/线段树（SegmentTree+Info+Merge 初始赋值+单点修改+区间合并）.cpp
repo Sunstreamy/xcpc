@@ -10,7 +10,7 @@ struct Node
 struct Nodemerge
 {
     Node res;
-    Node opertor()(const Node &le, const Node &ri) const
+    Node operator()() const
     {
         return res;
     }
