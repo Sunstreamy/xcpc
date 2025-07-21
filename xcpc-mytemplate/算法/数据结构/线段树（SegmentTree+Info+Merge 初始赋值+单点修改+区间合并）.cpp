@@ -10,10 +10,10 @@ struct Node
 struct Nodemerge
 {
     Node res;
-    Node opertor()()
+    Node opertor()(const Node &le, const Node &ri) const
     {
+        return res;
     }
-    return res;
 };
 template <class Info, class Merge = plus<Info>>
 struct SegmentTree
