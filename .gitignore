@@ -4,6 +4,8 @@
 # 忽略 VS Code 配置文件夹 (如果需要，通常在根目录)
 /.vscode/
 
+/test.cpp
+
 #忽略大佬的板子
 /xcpc-algorithm-templates/
 
