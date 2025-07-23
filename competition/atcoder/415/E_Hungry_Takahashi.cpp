@@ -9,10 +9,10 @@ typedef vector<string> vs;
 typedef bitset<20> b20;
 #define int long long
 
-const int MOD = 1e9 + 7;
-const int INF = 0x3f3f3f3f;
-const int MAXN = 400005;
-const int MAXM = 200005;
+const int mod = 1e9 + 7;
+const int inf = 0x3f3f3f3f;
+const int maxn = 400005;
+const int maxm = 200005;
 
 inline void rd(int &rex) // 读入优化
 {
@@ -38,13 +38,13 @@ inline vl discretize(const vl &a)
  * @param start_node 起点
  * @return vector<long long> 包含从起点到所有节点的最短距离。如果某节点不可达，其距离为无穷大。
  */
-vl dijkstra(int N, const vector<vector<pll>> &adj, int start_node)
+vl dijkstra(int n, const vector<vector<pll>> &adj, int start_node)
 {
     // 1. 初始化
-    vl dist(N + 1, numeric_limits<int>::max());
+    vl dist(n + 1, numeric_limits<int>::max());
 
     // 优先队列，用于找出当前已知路径中距离最短的节点
-    // greater<> 使其成为一个小顶堆，每次都能取出距离最小的 State
+    // greater<> 使其成为一个小顶堆，每次都能取出距离最小的 state
     // 使用 pair 来存储优先队列中的状态，第一个元素是距离，第二个元素是节点编号
     priority_queue<pll, vector<pll>, greater<pll>> pq;
 
@@ -67,7 +67,7 @@ vl dijkstra(int N, const vector<vector<pll>> &adj, int start_node)
             continue;
         }
 
-        // 4. 松弛操作 (Relaxation)
+        // 4. 松弛操作 (relaxation)
         // 遍历从 u 出发的所有边
         for (const auto &edge : adj[u])
         {
@@ -167,16 +167,16 @@ void solve()
     p.resize(days);
     for (int i = 0; i < days; i++)
         cin >> p[i];
-    ll le = 0, ri = 2000000000000000000LL;
-    while (le < ri)
+    ll le = -1, ri = 2000000000000000000LL;
+    while (le + 1 < ri)
     {
         ll mid = le + (ri - le) / 2;
         if (ok(mid))
             ri = mid;
         else
-            le = mid + 1;
+            le = mid;
     }
-    cout << le << "\n";
+    cout << ri << "\n";
 }
 
 signed main()

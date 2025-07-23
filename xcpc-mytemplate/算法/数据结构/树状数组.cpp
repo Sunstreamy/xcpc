@@ -1,6 +1,3 @@
-/**
- *   Ê÷×´Êý×é£¨Fenwick ÐÂ°æ£©
- **/
 template <typename T>
 struct Fenwick
 {
@@ -45,7 +42,7 @@ struct Fenwick
     {
         int x = 0;
         T cur{};
-        for (int i = 1 << std::__lg(n); i; i >> 1)
+        for (int i = 1 << std::__lg(n); i; i >>= 1)
         {
             if (x + i <= n && cur + a[x + i] <= k)
             {
