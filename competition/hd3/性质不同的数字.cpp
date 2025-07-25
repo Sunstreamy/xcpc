@@ -8,9 +8,9 @@ using u128 = unsigned __int128;
 using i128 = __int128;
 
 using b20 = bitset<20>;
-using vi = vector<int>;
-using vii = vector<vector<int>>;
-using pii = pair<int, int>;
+using vi = vector<i64>;
+using vii = vector<vector<i64>>;
+using pii = pair<i64, i64>;
 #define int long long
 
 const int mod = 1e9 + 7;
@@ -42,9 +42,38 @@ inline pair<vector<int>, int> discretize(const vector<int> &a)
     return {c, m};
 }
 //------------------------------------------------------------------
+mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 void solve()
 {
+    int n;
+    cin >> n;
+
+    vector<pair<int, u64>> a;
+    for (int i = 0; i < n; i++)
+    {
+        int l, r;
+        cin >> l >> r;
+        u64 x = rng();
+        a.emplace_back(l, x);
+        a.emplace_back(r + 1, x);
+    }
+    sort(a.begin(), a.end());
+    int lst = -1;
+    u64 cur = 0;
+    vi s{0};
+    for (auto [i, x] : a)
+    {
+        if (i > lst)
+        {
+            s.push_back(cur);
+        }
+        lst = i;
+        cur ^= x;
+    }
+    sort(s.begin(), s.end());
+    int ans = unique(s.begin(), s.end()) - s.begin();
+    cout << ans << "\n";
 }
 
 signed main()
