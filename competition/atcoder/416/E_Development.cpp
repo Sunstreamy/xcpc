@@ -1,6 +1,5 @@
 #pragma GCC optimize(2)
 #include <bits/stdc++.h>
-
 namespace IO
 {
     const int BUF_SIZE = 1 << 22;
@@ -9,7 +8,6 @@ namespace IO
 
 #define gc() (p_in == in_buf + BUF_SIZE ? (fread(in_buf, 1, BUF_SIZE, stdin), p_in = in_buf, *p_in++) : *p_in++)
 #define pc(x) (*p_out++ = (x), p_out == out_buf + BUF_SIZE ? (fwrite(out_buf, 1, BUF_SIZE, stdout), p_out = out_buf) : 0)
-
     template <typename T>
     inline void read(T &x)
     {
@@ -148,7 +146,7 @@ using vpii = vector<pair<int, int>>;
 #define int long long
 
 const int mod = 1e9 + 7;
-const int linf = 0x3f3f3f3f3f3f3f3fLL;
+const int lnf = 0x3f3f3f3f3f3f3f3fLL;
 const int maxm = 400005;
 const int maxn = 200005;
 
@@ -166,15 +164,98 @@ inline pair<vector<int>, int> discretize(const vector<int> &a)
     return {c, m};
 }
 //------------------------------------------------------------------
+int n, m;
+int dist[505][505];
+int k, t;
+int ans = 0;
+void upd(int u, int v, int &old, int nw)
+{
+    if (nw < old)
+    {
+        if (u < n && v < n)
+        {
+            if (old == lnf)
+                ans += nw;
+            else
+                ans -= old - nw;
+        }
+        old = nw;
+    }
+}
+
 void solve()
 {
+    read(n, m);
+    ++n;
+
+    fo(i, 1, n)
+        fo(j, 1, n)
+    {
+        dist[i][j] = (i == j) ? 0 : lnf;
+    }
+    fo(i, 1, m)
+    {
+        int u, v, w;
+        read(u, v, w);
+        dist[u][v] = min(dist[u][v], 2 * w);
+        dist[v][u] = min(dist[v][u], 2 * w);
+    }
+
+    read(k, t);
+    fo(i, 1, k)
+    {
+        int d;
+        read(d);
+        dist[d][n] = min(dist[d][n], t);
+        dist[n][d] = min(dist[n][d], t);
+    }
+    // floyd
+    fo(k, 1, n) fo(i, 1, n) fo(j, 1, n)
+        dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+
+    fo(i, 1, n - 1) fo(j, 1, n - 1)
+    {
+        if (dist[i][j] < lnf)
+            ans += dist[i][j];
+    }
+    int q;
+    read(q);
+    while (q--)
+    {
+        int op;
+        read(op);
+        if (op == 1)
+        {
+            int x, y;
+            int tt;
+            read(x, y, tt);
+            upd(x, y, dist[x][y], tt * 2);
+            upd(x, y, dist[y][x], tt * 2);
+
+            fo(i, 1, n) fo(j, 1, n) upd(i, j, dist[i][j], dist[i][x] + dist[x][j]);
+            fo(i, 1, n) fo(j, 1, n) upd(i, j, dist[i][j], dist[i][y] + dist[y][j]);
+        }
+        else if (op == 2)
+        {
+            int x;
+            read(x);
+            // 把城市x加入到“可通过最近机场中转达的城市中（以t为记录）”
+            upd(x, n, dist[x][n], t);
+            upd(n, x, dist[n][x], t);
+
+            // 因为刚加入新机场，机场网络更新（与城市x可以通过飞机到达的）
+            fo(i, 1, n) fo(j, 1, n) upd(i, j, dist[i][j], dist[i][n] + dist[n][j]);
+
+            // 更新有关城市x的所有路径（因为城市x不一定与所有城市都是可以通过机场抵达的）
+            fo(i, 1, n) fo(j, 1, n) upd(i, j, dist[i][j], dist[i][x] + dist[x][j]);
+        }
+        else
+            write(ans / 2, '\n');
+    }
 }
 
 signed main()
 {
-    int _;
-    read(_);
-    while (_--)
-        solve();
+    solve();
     return 0;
 }
