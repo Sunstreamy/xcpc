@@ -1,10 +1,11 @@
 #pragma GCC optimize(2)
 #include <bits/stdc++.h>
+
 namespace IO
 {
     const int BUF_SIZE = 1 << 22;
     char in_buf[BUF_SIZE], out_buf[BUF_SIZE], *p_in = in_buf + BUF_SIZE, *p_out = out_buf;
-    char stk[50];
+    char stk[25];
 
 #define gc() (p_in == in_buf + BUF_SIZE ? (fread(in_buf, 1, BUF_SIZE, stdin), p_in = in_buf, *p_in++) : *p_in++)
 #define pc(x) (*p_out++ = (x), p_out == out_buf + BUF_SIZE ? (fwrite(out_buf, 1, BUF_SIZE, stdout), p_out = out_buf) : 0)
@@ -146,7 +147,9 @@ using vpii = vector<pair<i64, i64>>;
 
 #define int long long
 
-const int M = 1e9 + 7;
+#define int long long
+
+const int mod = 998244353;
 const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
 const int maxm = 400005;
 const int maxn = 200005;
@@ -165,9 +168,73 @@ inline pair<vector<int>, int> discretize(const vector<int> &a)
     return {c, m};
 }
 //------------------------------------------------------------------
+
+long long pow_mod(long long a, int m)
+{
+    long long ans = 1;
+    while (m)
+    {
+        if (m & 1)
+            ans = ans * a % mod;
+        a = a * a % mod;
+        m >>= 1;
+    }
+    return ans;
+}
 void solve()
 {
-    
+    int n;
+    read(n);
+    vi a(n);
+    i64 sum = 0;
+    bool flag = true;
+    fo(i, 0, n - 1)
+    {
+        read(a[i]);
+        sum += a[i];
+        if (a[i] != 0)
+            flag = false;
+    }
+    i64 cnt = 0;
+    if (flag)
+    {
+        i64 inv2 = pow_mod(2, mod - 2);
+        i64 lr = ((n % mod * (n + 1) % mod) * inv2) % mod;
+        i64 L = 1LL * (n + 1);
+        i64 R = 1LL * (n + 1);
+        cnt = (lr % mod * L % mod * R % mod) % mod;
+    }
+    else
+    {
+        int l_idx = -1, r_idx = -1;
+        fo(i, 0, n - 1)
+        {
+            if (a[i])
+            {
+                if (l_idx == -1)
+                    l_idx = i + 1;
+                r_idx = i + 1;
+            }
+        }
+        int mn = linf, mx = -1;
+        fo(i, 0, n - 1)
+        {
+            if (a[i] != 0)
+            {
+                if (mn == linf)
+                {
+                    mn = a[i];
+                }
+                mn = min(mn, a[i]);
+                mx = max(mx, a[i]);
+            }
+        }
+        int l = l_idx, r = n - r_idx + 1;
+        int L = mn + n + 1, R = n - mx + 1;
+        cnt = (l % mod * r % mod * L % mod * R % mod) % mod;
+    }
+    cnt = (cnt % mod + mod) % mod;
+    write(sum, ' ', cnt, "\n");
 }
 
 signed main()

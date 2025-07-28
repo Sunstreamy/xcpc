@@ -1,10 +1,11 @@
 #pragma GCC optimize(2)
 #include <bits/stdc++.h>
+
 namespace IO
 {
     const int BUF_SIZE = 1 << 22;
     char in_buf[BUF_SIZE], out_buf[BUF_SIZE], *p_in = in_buf + BUF_SIZE, *p_out = out_buf;
-    char stk[50];
+    char stk[25];
 
 #define gc() (p_in == in_buf + BUF_SIZE ? (fread(in_buf, 1, BUF_SIZE, stdin), p_in = in_buf, *p_in++) : *p_in++)
 #define pc(x) (*p_out++ = (x), p_out == out_buf + BUF_SIZE ? (fwrite(out_buf, 1, BUF_SIZE, stdout), p_out = out_buf) : 0)
@@ -136,18 +137,18 @@ using u32 = unsigned;
 using u128 = unsigned __int128;
 using i128 = __int128;
 using b20 = bitset<20>;
-using vi = vector<i64>;
-using vii = vector<vector<i64>>;
-using pii = pair<i64, i64>;
-using vpii = vector<pair<i64, i64>>;
+using vi = vector<int>;
+using vii = vector<vector<int>>;
+using pii = pair<int, int>;
+using vpii = vector<pair<int, int>>;
 #define fo(i, l, r) for (int i = (l); i <= (r); ++i)
 #define fu(i, l, r) for (int i = (l); i < (r); ++i)
 #define fd(i, r, l) for (int i = (r); i >= (l); --i)
 
 #define int long long
 
-const int M = 1e9 + 7;
-const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
+const int mod = 1e9 + 7;
+const int linf = 0x3f3f3f3f3f3f3f3fLL;
 const int maxm = 400005;
 const int maxn = 200005;
 
@@ -167,7 +168,39 @@ inline pair<vector<int>, int> discretize(const vector<int> &a)
 //------------------------------------------------------------------
 void solve()
 {
-    
+    int n;
+    read(n);
+
+    int sum = 0;
+    bool flag = false;
+
+    for (int i = 0; i < n; ++i)
+    {
+        int p;
+        read(p);
+
+        if (p == 0)
+        {
+            flag = true;
+        }
+
+        sum += p;
+    }
+
+    if (flag)
+    {
+        write("NO\n");
+        return;
+    }
+
+    if (sum >= 2 * (n - 1))
+    {
+        write("YES\n");
+    }
+    else
+    {
+        write("NO\n");
+    }
 }
 
 signed main()

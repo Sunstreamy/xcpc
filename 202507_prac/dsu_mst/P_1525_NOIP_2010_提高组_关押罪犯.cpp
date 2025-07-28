@@ -4,7 +4,7 @@ namespace IO
 {
     const int BUF_SIZE = 1 << 22;
     char in_buf[BUF_SIZE], out_buf[BUF_SIZE], *p_in = in_buf + BUF_SIZE, *p_out = out_buf;
-    char stk[50];
+    char stk[25];
 
 #define gc() (p_in == in_buf + BUF_SIZE ? (fread(in_buf, 1, BUF_SIZE, stdin), p_in = in_buf, *p_in++) : *p_in++)
 #define pc(x) (*p_out++ = (x), p_out == out_buf + BUF_SIZE ? (fwrite(out_buf, 1, BUF_SIZE, stdout), p_out = out_buf) : 0)
@@ -68,7 +68,6 @@ namespace IO
         read(x);
         read(args...);
     }
-
     template <typename T>
     inline void write(T x)
     {
@@ -146,10 +145,10 @@ using vpii = vector<pair<i64, i64>>;
 
 #define int long long
 
-const int M = 1e9 + 7;
+const int mod = 1e9 + 7;
 const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
 const int maxm = 400005;
-const int maxn = 200005;
+const int maxn = 100005;
 
 inline pair<vector<int>, int> discretize(const vector<int> &a)
 {
@@ -165,16 +164,68 @@ inline pair<vector<int>, int> discretize(const vector<int> &a)
     return {c, m};
 }
 //------------------------------------------------------------------
+struct node
+{
+    int u, v, c;
+};
+int fa[maxn * 2], sz[maxn * 2];
+bool cmp(node x, node y)
+{
+    return x.c > y.c;
+}
+int find(int x)
+{
+    if (x == fa[x])
+        return x;
+    return fa[x] = find(fa[x]);
+}
+void mg(int x, int y)
+{
+    int fx = find(x), fy = find(y);
+    if (fx == fy)
+        return;
+    if (sz[fx] < sz[fy])
+    {
+        fa[fx] = fy;
+        sz[fy] += sz[fx];
+    }
+    else
+    {
+        fa[fy] = fx;
+        sz[fx] += sz[fy];
+    }
+}
 void solve()
 {
-    
+    int n, m;
+    read(n, m);
+    vector<node> a(m);
+    fo(i, 0, m - 1)
+        read(a[i].u, a[i].v, a[i].c);
+    sort(a.begin(), a.end(), cmp);
+    fo(i, 1, 2 * n)
+    {
+        fa[i] = i;
+        sz[i] = 1;
+    }
+    fo(i, 0, m - 1)
+    {
+        if (find(a[i].u) == find(a[i].v))
+        {
+            write(a[i].c, '\n');
+            return;
+        }
+        else
+        {
+            mg(a[i].u, a[i].v + n);
+            mg(a[i].v, a[i].u + n);
+        }
+    }
+    write(0);
 }
 
 signed main()
 {
-    int _;
-    read(_);
-    while (_--)
-        solve();
+    solve();
     return 0;
 }

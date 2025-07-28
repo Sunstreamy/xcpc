@@ -6,19 +6,19 @@
 #include <cmath>
 using namespace std;
 
-typedef long long ll;
+using i64 = long long;
 const int base = 100000000;
 const int num_digit = 8;
 const int maxn = 1000;
-ll mul_mod (ll x, ll y, ll n){
-	ll T = floor(sqrt(n) + 0.5);
-	ll t = T * T - n;
-	ll a = x / T; ll b = x % T;
-	ll c = y / T; ll d = y % T;
-	ll e = a * c / T; ll f = a * c % T;
-	ll v = ((a * d + b * c) % n + e * t) % n;
-	ll g = v / T; ll h = v % T;
-	ll ans = (((f + g) * t % n + b * d) % n + h * T) % n;
+i64 mul_mod (i64 x, i64 y, i64 n){
+	i64 T = floor(sqrt(n) + 0.5);
+	i64 t = T * T - n;
+	i64 a = x / T; i64 b = x % T;
+	i64 c = y / T; i64 d = y % T;
+	i64 e = a * c / T; i64 f = a * c % T;
+	i64 v = ((a * d + b * c) % n + e * t) % n;
+	i64 g = v / T; i64 h = v % T;
+	i64 ans = (((f + g) * t % n + b * d) % n + h * T) % n;
 	while (ans < 0) ans += n;
 	return ans;
 }
@@ -93,17 +93,17 @@ bign operator- (const bign &a, const bign &b){
 }
 bign operator* (const bign &a, const bign &b){
 	bign c;
-	ll g = 0;
+	i64 g = 0;
 	int i, k;
 	c.len = a.len + b.len;
 	c.s[0] = 0;
 	for(i = 1; i <= c.len; i++) c.s[i] = 0;
 	for(k = 1; k <= c.len; k++){
-		ll tmp = g;
+		i64 tmp = g;
 		i = k + 1 - b.len;
 		if(i < 1) i = 1;
 		for (; i <= k && i <= a.len; i++)
-			tmp += (ll)a.s[i] * (ll)b.s[k+1-i];
+			tmp += (i64)a.s[i] * (i64)b.s[k+1-i];
 		g = tmp / base;
 		c.s[k] = tmp % base;
 	}
@@ -112,12 +112,12 @@ bign operator* (const bign &a, const bign &b){
 }
 bign operator/ (const bign &a, int n)
 {
-	ll g = 0;
+	i64 g = 0;
 	bign c;
 	c.len = a.len;
 	for (int i = a.len; i > 0; --i)
 	{
-		ll tmp = g * base + a.s[i];
+		i64 tmp = g * base + a.s[i];
 		c.s[i] = tmp / n;
 		g = tmp % n;
 	}
@@ -135,8 +135,8 @@ bign operator/ (const bign &a, const bign &b)
 	}
 	return L;
 }
-ll bigmod(const bign &a, ll m){
-	ll d = 0;
+i64 bigmod(const bign &a, i64 m){
+	i64 d = 0;
 	for(int i = a.len; i > 0; --i){
 		d = mul_mod(d, base, m);
 		d = (d + a.s[i]) % m;
@@ -192,6 +192,6 @@ int main()
 	c = gcd(a, b);
 	print(c);
 	//print(a*b);
-	//cout << '\n' << 3445453953435LL * 897676LL;
+	//cout << '\n' << 3445453953435i64 * 897676i64;
 	return 0;
 }

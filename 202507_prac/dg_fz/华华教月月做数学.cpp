@@ -146,7 +146,7 @@ using vpii = vector<pair<i64, i64>>;
 
 #define int long long
 
-const int M = 1e9 + 7;
+const int mod = 1e9 + 7;
 const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
 const int maxm = 400005;
 const int maxn = 200005;
@@ -165,9 +165,29 @@ inline pair<vector<int>, int> discretize(const vector<int> &a)
     return {c, m};
 }
 //------------------------------------------------------------------
+int M;
+i64 cc(i64 a, i64 b, i64 mm)
+{
+    return (i128)a * b % mm;
+}
+
+long long pow_mod(long long a, int m)
+{
+    long long ans = 1;
+    while (m)
+    {
+        if (m & 1)
+            ans = cc(ans, a, M);
+        a = cc(a, a, M);
+        m >>= 1;
+    }
+    return ans;
+}
 void solve()
 {
-    
+    int a, m;
+    read(a, m, M);
+    write(pow_mod(a, m), '\n');
 }
 
 signed main()
