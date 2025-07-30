@@ -161,32 +161,53 @@ struct dsu {
         return sz[find(x)];
     }
 };
-struct P {
-    int u, v, w;
-    bool operator<(const P &b) {
-        return w < b.w;
-    }
-} edge[maxn];
+struct mstk {
+    struct edge {
+        int u, v, w;
+        bool operator<(const edge &other) const {
+            return w < other.w;
+        }
+    };
 
+    int n;
+    vector<edge> edges;
+
+    mstk(int n_nodes, int m_edges = 0) : n(n_nodes) {
+        edges.reserve(m_edges);
+    }
+
+    void add_edge(int u, int v, int w) {
+        edges.emplace_back(u, v, w);
+    }
+
+    i64 run() {
+        sort(edges.begin(), edges.end());
+        dsu dt(n);
+        i64 totalw = 0;
+        int cnt = 0;
+        for (const auto &e : edges) {
+            if (dt.mg(e.u, e.v)) {
+                totalw += e.w;
+                cnt++;
+            }
+        }
+        return (cnt == n - 1) ? totalw : -1;
+    }
+};
 void solve() {
     int n, m;
     read(n, m);
-    dsu d(n);
-    fo(i, 1, m) read(edge[i].u, edge[i].v, edge[i].w);
-    sort(edge + 1, edge + 1 + m);
-    d.init(n);
-    i64 ans = 0;
-    int cnt = 0;
+    mstk mst(n, m);
     fo(i, 1, m) {
-        if (d.mg(edge[i].u, edge[i].v)) {
-            ans += edge[i].w;
-            cnt++;
-        }
+        int u, v, w;
+        read(u, v, w);
+        mst.add_edge(u, v, w);
     }
-    if (cnt == n - 1)
-        write(ans, '\n');
-    else
+    i64 ans = mst.run();
+    if (ans == -1)
         write("orz\n");
+    else
+        write(ans);
 }
 
 signed main() {

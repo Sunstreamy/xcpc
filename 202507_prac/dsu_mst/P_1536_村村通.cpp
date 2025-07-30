@@ -107,8 +107,7 @@ using b20 = bitset<20>;
 using vi = vector<i64>;
 using vii = vector<vector<i64>>;
 using pii = pair<i64, i64>;
-using vp = vector<pair<i64, i64>>;
-using vvp = vector<vector<pair<i64, i64>>>;
+using vpii = vector<pair<i64, i64>>;
 #define fo(i, l, r) for (int i = (l); i <= (r); ++i)
 #define fu(i, l, r) for (int i = (l); i < (r); ++i)
 #define fd(i, r, l) for (int i = (r); i >= (l); --i)
@@ -120,13 +119,52 @@ const int maxm = 400005;
 const int maxn = 200005;
 //------------------------------------------------------------------
 
-void solve() {
+struct dsu {
+    vi fa, sz;
+    dsu(int n) : fa(n + 1), sz(n + 1, 1) {
+        iota(fa.begin(), fa.end(), 0);
+    }
+    int find(int x) {
+        while (x != fa[x]) {
+            x = fa[x] = fa[fa[x]];
+        }
+        return x;
+    }
+    bool same(int x, int y) {
+        return find(x) == find(y);
+    }
+    bool mg(int x, int y) {
+        x = find(x), y = find(y);
+        if (x == y) return false;
+        if (x < y) swap(x, y);
+        fa[y] = x;
+        sz[x] += sz[y];
+        return true;
+    }
+    int size(int x) {
+        return sz[x];
+    }
+};
 
+void solve() {
+    int n, m;
+    read(n, m);
+    while (n != 0) {
+        dsu dt(n);
+        int ans = n;
+        fo(i, 1, m) {
+            int u, v;
+            read(u, v);
+            if (dt.mg(u, v)) {
+                ans--;
+            }
+        }
+        write(ans - 1, '\n');
+        read(n, m);
+    }
 }
 
 signed main() {
-    int _;
-    read(_);
-    while (_--) solve();
+    solve();
     return 0;
 }

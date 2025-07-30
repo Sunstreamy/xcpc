@@ -1,60 +1,47 @@
-# Clang-Format Style File for Competitive Programming
+# =========================================================================
+# Clang-Format Style File for Competitive Programming (v5 - Final & Polished)
 # 适用于算法竞赛的 Clang-Format 配置文件
 #
 # 主要风格: K&R 风格的变种 (大括号不换行), 基于 Google Style 修改
+# =========================================================================
 
 # --- 基础风格 ---
-# 基于一个公认的优秀风格，我们选择 Google C++ Style Guide 作为基础。
-# 它本身就是 K&R 风格，大括号倾向于不换行。
 BasedOnStyle: Google
 
 # --- 缩进与对齐 ---
-# 缩进宽度。4个空格是业界广泛接受的标准。
 IndentWidth: 4
-# 是否使用 Tab 进行缩进。Never 表示只用空格，这是为了避免在不同编辑器下显示不一致。
 UseTab: Never
 
 # --- 换行与空格 ---
-# 每行最大字符数。超过这个长度，Clang-Format 会尝试自动换行。
 ColumnLimit: 120
-# 在C++11的大括号列表（如 vector<int> v{1, 2, 3};）中，允许在括号前后插入空格。
 Cpp11BracedListStyle: true
 
-# --- 大括号换行控制 (核心修改) ---
-# 控制不同场景下大括号的换行行为。
+# --- 大括号与代码块控制 (核心修改) ---
+# 控制不同场景下大括号的换行行为，以及短代码块的显示方式。
+
+# 1. 大括号强制换行策略 (全部设为 false 实现 K&R 风格)
 BraceWrapping:
-  # 函数定义后的大括号是否换行。false 表示不换行，即你想要的 K&R 风格。
-  # 示例: void myFunction() { ... }
   AfterFunction: false
-  # class/struct 定义后的大括号是否换行。
   AfterClass: false
-  # 控制块（if/else/for/while）后的大括号是否换行。
   AfterControlStatement: false
-  # enum 定义后的大括号是否换行。
   AfterEnum: false
-  # namespace 定义后的大括号是否换行。
   AfterNamespace: false
-  # union 定义后的大括号是否换行。
   AfterUnion: false
-  # 在 catch 块前的大括号是否换行。
   BeforeCatch: false
-  # 在 else 块前的大括号是否换行。
   BeforeElse: false
 
+# 2. 短代码块单行显示策略 (特例处理)
+# 允许空的 {} 块保持在同一行。
+AllowShortBlocksOnASingleLine: Empty
+# 允许短的构造函数（包括带初始化列表的）保持在同一行。
+AllowShortConstructorsOnASingleLine: true
+# 只允许空的函数体 {} 保持在同一行。
+AllowShortFunctionsOnASingleLine: Empty
+
 # --- 指针与引用对齐 ---
-# 控制指针符号 * 和引用符号 & 的位置。
-# 可选值: Left (int* p), Right (int *p), Middle (int * p).
-# Middle 是一种清晰的风格，但 Google 默认是 Left。这里保持 Google 默认。
 PointerAlignment: Left
 
-# --- 函数相关 ---
-# 是否允许短的函数（声明、实现、调用）挤在一行。
-# None 表示总是换行，保持代码清晰。
-AllowShortFunctionsOnASingleLine: None
-
 # --- 头文件排序 ---
-# 自动对 #include 进行排序，有助于保持代码整洁。
-# 你可以自定义顺序，这里是一个推荐的竞赛模板顺序。
 IncludeCategories:
   - Regex:           '^<bits/stdc++.h>'
     Priority:        1
@@ -64,5 +51,4 @@ IncludeCategories:
     Priority:        3
 
 # --- 其他 ---
-# 自动修复头文件包含顺序中的注释。
 FixNamespaceComments: true
