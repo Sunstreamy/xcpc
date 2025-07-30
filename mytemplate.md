@@ -1,11 +1,7 @@
 # 算法模板库 
 
----
-
-## 目录 (Table of Contents)
 
 - [算法模板库](#算法模板库)
-  - [目录 (Table of Contents)](#目录-table-of-contents)
   - [基础算法](#基础算法)
     - [离散化](#离散化)
   - [数据结构](#数据结构)
