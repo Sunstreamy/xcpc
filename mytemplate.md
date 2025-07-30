@@ -30,40 +30,35 @@
 ### 并查集 (DSU) - 路径压缩 + 按秩序合并
 
 ```cpp
-struct dsu
-{
+struct dsu {
     vi fa, sz;
     dsu() {};
-    dsu(int n)
-    {
+    dsu(int n) {
         init(n);
     }
-    void init(int n)
-    {
+    void init(int n) {
         fa.resize(n + 1);
         iota(fa.begin(), fa.end(), 0);
         sz.assign(n + 1, 1);
     }
-    int find(int x){
-        while(x!=fa[x]){
+    int find(int x) {
+        while (x != fa[x]) {
             x = fa[x] = fa[fa[x]];
         }
         return x;
     }
-    bool mg(int x,int y){
+    bool mg(int x, int y) {
         x = find(x), y = find(y);
-        if(x==y)
-            return false;
-        if(sz[x]<sz[y])
-            swap(x, y);
+        if (x == y) return false;
+        if (sz[x] < sz[y]) swap(x, y);
         fa[y] = x;
         sz[x] += sz[y];
         return true;
     }
-    bool same(int x,int y){
+    bool same(int x, int y) {
         return find(x) == find(y);
     }
-    int siz(int x){
+    int siz(int x) {
         return sz[find(x)];
     }
 };
