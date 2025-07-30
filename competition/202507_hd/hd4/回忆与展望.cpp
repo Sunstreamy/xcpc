@@ -29,6 +29,7 @@ namespace IO
         if (f)
             x = -x;
     }
+
     inline void read(char &c)
     {
         c = gc();
@@ -67,6 +68,7 @@ namespace IO
         read(x);
         read(args...);
     }
+
     template <typename T>
     inline void write(T x)
     {
@@ -89,6 +91,7 @@ namespace IO
         while (top)
             pc(stk[top--]);
     }
+
     inline void write(char c) { pc(c); }
     inline void write(const char *s)
     {
@@ -100,12 +103,14 @@ namespace IO
         for (char c : s)
             pc(c);
     }
+
     template <typename T, typename... Args>
     inline void write(T x, Args... args)
     {
         write(x);
         write(args...);
     }
+
     struct Flusher
     {
         ~Flusher()
@@ -121,8 +126,10 @@ namespace IO
 #undef gc
 #undef pc
 }
+
 using namespace std;
 using namespace IO;
+
 using i64 = long long;
 using u64 = unsigned long long;
 using u32 = unsigned;
@@ -136,7 +143,14 @@ using vpii = vector<pair<i64, i64>>;
 #define fo(i, l, r) for (int i = (l); i <= (r); ++i)
 #define fu(i, l, r) for (int i = (l); i < (r); ++i)
 #define fd(i, r, l) for (int i = (r); i >= (l); --i)
+
 #define int long long
+
+const int M = 1e9 + 7;
+const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
+const int maxm = 400005;
+const int maxn = 5e6 + 5;
+
 inline pair<vector<int>, int> discretize(const vector<int> &a)
 {
     vector<int> b = a;
@@ -150,19 +164,36 @@ inline pair<vector<int>, int> discretize(const vector<int> &a)
     }
     return {c, m};
 }
-
-const int M = 1e9 + 7;
-const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
-const int maxm = 400005;
-const int maxn = 200005;
 //------------------------------------------------------------------
+int a[maxn], f[maxn], g[maxn];
 
 void solve()
 {
+    int n, x, y, z;
+    read(n, x, y, z);
+    fo(i, 1, n) f[i] = g[i] = 0;
+    fo(i, 1, n)
+    {
+        read(a[i]);
+        f[a[i]]++;
+        g[f[a[i]]]++;
+    }
+    fo(i, 1, n)
+        g[i] += g[i - 1];
+    int ans = -1;
+    fo(i, 1, n)
+    {
+        if (g[i] - i + 1 >= 0)
+            ans = max(ans, x * (g[i] - i + 1) + z * (i - 1) + y * (n - g[i]));
+    }
+    write(ans, '\n');
 }
 
 signed main()
 {
-    solve();
+    int _;
+    read(_);
+    while (_--)
+        solve();
     return 0;
 }

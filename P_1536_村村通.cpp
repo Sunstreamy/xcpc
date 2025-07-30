@@ -156,8 +156,17 @@ const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
 const int maxm = 400005;
 const int maxn = 200005;
 //------------------------------------------------------------------
+struct P
+{
+    int u, v, w;
+    bool operator<(const P &b) const
+    {
+        return w < b.w;
+    }
+}edge[max]
 
-void solve()
+void
+solve()
 {
 }
 

@@ -1,4 +1,3 @@
-#pragma GCC optimize(2)
 #include <bits/stdc++.h>
 namespace IO
 {
@@ -29,6 +28,7 @@ namespace IO
         if (f)
             x = -x;
     }
+
     inline void read(char &c)
     {
         c = gc();
@@ -67,6 +67,7 @@ namespace IO
         read(x);
         read(args...);
     }
+
     template <typename T>
     inline void write(T x)
     {
@@ -89,6 +90,7 @@ namespace IO
         while (top)
             pc(stk[top--]);
     }
+
     inline void write(char c) { pc(c); }
     inline void write(const char *s)
     {
@@ -100,12 +102,14 @@ namespace IO
         for (char c : s)
             pc(c);
     }
+
     template <typename T, typename... Args>
     inline void write(T x, Args... args)
     {
         write(x);
         write(args...);
     }
+
     struct Flusher
     {
         ~Flusher()
@@ -121,8 +125,10 @@ namespace IO
 #undef gc
 #undef pc
 }
+
 using namespace std;
 using namespace IO;
+
 using i64 = long long;
 using u64 = unsigned long long;
 using u32 = unsigned;
@@ -136,7 +142,14 @@ using vpii = vector<pair<i64, i64>>;
 #define fo(i, l, r) for (int i = (l); i <= (r); ++i)
 #define fu(i, l, r) for (int i = (l); i < (r); ++i)
 #define fd(i, r, l) for (int i = (r); i >= (l); --i)
+
 #define int long long
+
+const int M = 1e9 + 7;
+const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
+const int maxm = 400005;
+const int maxn = 40005;
+
 inline pair<vector<int>, int> discretize(const vector<int> &a)
 {
     vector<int> b = a;
@@ -150,15 +163,52 @@ inline pair<vector<int>, int> discretize(const vector<int> &a)
     }
     return {c, m};
 }
-
-const int M = 1e9 + 7;
-const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
-const int maxm = 400005;
-const int maxn = 200005;
 //------------------------------------------------------------------
-
+int fa[maxn], sz[maxn];
+int n, m, p, q;
+void init()
+{
+    fo(i, 0, n + m - 1)
+    {
+        fa[i] = i;
+        sz[i] = 1;
+    }
+}
+int find(int x)
+{
+    if (fa[x] == x)
+        return x;
+    return fa[x] = find(fa[x]);
+}
+void mg(int x, int y)
+{
+    int fx = find(x), fy = find(y);
+    if (fx == fy)
+        return;
+    if (sz[fx] < sz[fy])
+        swap(fx, fy);
+    fa[fy] = fx;
+    sz[fx] += sz[fy];
+}
 void solve()
 {
+    read(n, m, p, q);
+    init();
+    fo(i, 1, p)
+    {
+        int a, b;
+        read(a, b);
+        mg(a, b);
+    }
+    fo(i, 1, q)
+    {
+        int a, b;
+        read(a, b);
+        mg(abs(a) + n, abs(b) + n);
+    }
+    int siz1 = sz[find(1)];
+    int siz2 = sz[find(n + 1)];
+    write(min(siz1, siz2)), '\n';
 }
 
 signed main()

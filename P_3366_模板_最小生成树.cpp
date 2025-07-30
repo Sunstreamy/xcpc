@@ -156,9 +156,79 @@ const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
 const int maxm = 400005;
 const int maxn = 200005;
 //------------------------------------------------------------------
+struct dsu
+{
+    vi fa, sz;
+    dsu() {};
+    dsu(int n)
+    {
+        init(n);
+    }
+    void init(int n)
+    {
+        fa.resize(n + 1);
+        iota(fa.begin(), fa.end(), 0);
+        sz.assign(n + 1, 1);
+    }
+    int find(int x)
+    {
+        while (x != fa[x])
+        {
+            x = fa[x] = fa[fa[x]];
+        }
+        return x;
+    }
+    bool mg(int x, int y)
+    {
+        x = find(x), y = find(y);
+        if (x == y)
+            return false;
+        if (sz[x] < sz[y])
+            swap(x, y);
+        fa[y] = x;
+        sz[x] += sz[y];
+        return true;
+    }
+    bool same(int x, int y)
+    {
+        return find(x) == find(y);
+    }
+    int siz(int x)
+    {
+        return sz[find(x)];
+    }
+};
+struct P
+{
+    int u, v, w;
+    bool operator<(const P &b)
+    {
+        return w < b.w;
+    }
+} edge[maxn];
 
 void solve()
 {
+    int n, m;
+    read(n, m);
+    dsu d(n);
+    fo(i, 1, m) read(edge[i].u, edge[i].v, edge[i].w);
+    sort(edge + 1, edge + 1 + m);
+    d.init(n);
+    i64 ans = 0;
+    int cnt = 0;
+    fo(i, 1, m)
+    {
+        if (d.mg(edge[i].u, edge[i].v))
+        {
+            ans += edge[i].w;
+            cnt++;
+        }
+    }
+    if (cnt == n - 1)
+        write(ans, '\n');
+    else
+        write("orz\n");
 }
 
 signed main()

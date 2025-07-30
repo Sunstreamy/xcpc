@@ -29,6 +29,7 @@ namespace IO
         if (f)
             x = -x;
     }
+
     inline void read(char &c)
     {
         c = gc();
@@ -67,6 +68,7 @@ namespace IO
         read(x);
         read(args...);
     }
+
     template <typename T>
     inline void write(T x)
     {
@@ -89,6 +91,7 @@ namespace IO
         while (top)
             pc(stk[top--]);
     }
+
     inline void write(char c) { pc(c); }
     inline void write(const char *s)
     {
@@ -100,12 +103,14 @@ namespace IO
         for (char c : s)
             pc(c);
     }
+
     template <typename T, typename... Args>
     inline void write(T x, Args... args)
     {
         write(x);
         write(args...);
     }
+
     struct Flusher
     {
         ~Flusher()
@@ -121,8 +126,10 @@ namespace IO
 #undef gc
 #undef pc
 }
+
 using namespace std;
 using namespace IO;
+
 using i64 = long long;
 using u64 = unsigned long long;
 using u32 = unsigned;
@@ -136,7 +143,14 @@ using vpii = vector<pair<i64, i64>>;
 #define fo(i, l, r) for (int i = (l); i <= (r); ++i)
 #define fu(i, l, r) for (int i = (l); i < (r); ++i)
 #define fd(i, r, l) for (int i = (r); i >= (l); --i)
+
 #define int long long
+
+const int M = 1e9 + 7;
+const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
+const int maxm = 400005;
+const int maxn = 200005;
+
 inline pair<vector<int>, int> discretize(const vector<int> &a)
 {
     vector<int> b = a;
@@ -150,15 +164,57 @@ inline pair<vector<int>, int> discretize(const vector<int> &a)
     }
     return {c, m};
 }
-
-const int M = 1e9 + 7;
-const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
-const int maxm = 400005;
-const int maxn = 200005;
 //------------------------------------------------------------------
+bool od(i64 num, int k)
+{
+    if (k == 0)
+        return false;
+    // 获取 num 低于 k 的所有位
+    i64 mask = (1LL << k) - 1;
+    i64 lower_k_bits = num & mask;
+
+    // 计算这些位中 1 的数量
+    int count = __builtin_popcountll(lower_k_bits);
+
+    // 返回数量是否为奇数
+    return (count % 2 != 0);
+}
 
 void solve()
 {
+    int n;
+    read(n);
+    vi a(n);
+    int ans = 0;
+    fo(i, 0, n - 1)
+    {
+        read(a[i]);
+    }
+    fo(k, 0, 30)
+    {
+        int cnt0_1 = 0, cnt0_2 = 0, cnt1_1 = 0, cnt1_2 = 0;
+
+        for (auto x : a)
+        {
+            if ((x >> k) & 1)
+            {
+                if (od(x, k))
+                    cnt1_1++;
+                else
+                    cnt1_2++;
+            }
+            else
+            {
+                if (od(x, k))
+                    cnt0_1++;
+                else
+                    cnt0_2++;
+            }
+        }
+        int nn = (cnt0_1 * cnt1_1) + (cnt0_2 * cnt1_2);
+        ans += (1 << k) * nn;
+    }
+    write(ans, '\n');
 }
 
 signed main()
