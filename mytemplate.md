@@ -192,7 +192,7 @@ i64 inverse1(i64 a, i64 n) {
 ### Dijkstra 
 
 ```cpp
-****// 堆优化O(M log N)
+// 堆优化O(M log N)
 struct fdijkstra {
     int n;
     vvp grid;
