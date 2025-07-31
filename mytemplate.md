@@ -149,6 +149,7 @@ struct Fenwick {
 ## 数论
 
 ### 快速幂
+
 ```cpp
 i64 qmul(i64 a, i64 b) {
     return (i128)a * b % mod;
@@ -335,8 +336,8 @@ struct mstk {
     int n;
     vector<edge> edges;
 
-    mstk(int nn, int mm = 0) : n(nn) {
-        edges.reserve(mm);
+    mstk(int n_,int m_):n(n_){
+        edges.reserve(m_);
     }
 
     void ad(int u, int v, int w) {
@@ -365,7 +366,7 @@ void solve() {
 
     mstk mst(n, m);
 
-    for (int i = 0; i < m; ++i) {
+    fu(i,0,m){
         int u, v, w;
         read(u, v, w);
         mst.ad(u, v, w);

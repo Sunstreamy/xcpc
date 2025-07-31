@@ -94,7 +94,7 @@ struct Flusher {
 
 #undef gc
 #undef pc
-}  
+}  // namespace IO
 using namespace std;
 using namespace IO;
 using i64 = long long;
@@ -118,14 +118,75 @@ constexpr i64 linf = 0x3f3f3f3f3f3f3f3fLL;
 constexpr int maxm = 400005;
 constexpr int maxn = 200005;
 //------------------------------------------------------------------
+struct dsu {
+    vi fa, sz;
+    dsu(int n) : fa(n + 1), sz(n + 1, 1) {
+        iota(fa.begin(), fa.end(), 0);
+    }
+    int find(int x) {
+        while (x != fa[x]) {
+            x = fa[x] = fa[fa[x]];
+        }
+        return x;
+    }
+    bool mg(int x, int y) {
+        x = find(x), y = find(y);
+        if (x == y) return false;
+        if (sz[x] < sz[y]) swap(x, y);
+        fa[y] = x;
+        sz[x] += sz[y];
+        return true;
+    }
+};
+struct mstk {
+    struct edge {
+        int u, v, w;
+        bool operator<(const edge &other) const {
+            return w < other.w;
+        }
+    };
+    int n;
+    vector<edge> edges;
+
+    mstk(int n_, int m_) : n(n_) {
+        edges.reserve(m_);
+    }
+    void ad(int u, int v, int w) {
+        edges.emplace_back(u, v, w);
+    }
+    i64 run() {
+        sort(edges.begin(), edges.end());
+        dsu dt(n);
+        int ans = -1;
+        int cnt = 0;
+        for (const auto &ed : edges) {
+            if (dt.mg(ed.u, ed.v)) {
+                ans = ed.w;
+                cnt++;
+            }
+        }
+        return (cnt == n - 1) ? ans: -1;
+    }
+};
 
 void solve() {
+    int n, m;
+    read(n, m);
+    mstk mst(n, m);
 
+    fu(i, 0, m) {
+        int u, v, w;
+        read(u, v, w);
+        mst.ad(u, v, w);
+    }
+    i64 ans = mst.run();
+    if (ans == -1)
+        write(-1, '\n');
+    else
+        write(ans, '\n');
 }
 
 signed main() {
-    int _;
-    read(_);
-    while (_--) solve();
+    solve();
     return 0;
 }
