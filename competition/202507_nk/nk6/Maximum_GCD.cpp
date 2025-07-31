@@ -40,7 +40,7 @@ inline void read(std::string &s) {
 inline void getline(std::string &s) {
     s.clear();
     char c = gc();
-    while (c == '\n' || c == '\r') {  // 吃掉行首的换行符
+    while (c == '\n' || c == '\r') {
         c = gc();
     }
     while (c != '\n' && c != '\r' && c != EOF) {
@@ -95,7 +95,7 @@ struct Flusher {
 
 #undef gc
 #undef pc
-}  
+}  // namespace IO
 using namespace std;
 using namespace IO;
 using i64 = long long;
@@ -120,8 +120,84 @@ constexpr int maxm = 400005;
 constexpr int maxn = 200005;
 //------------------------------------------------------------------
 
-void solve() {
+vi get_divs(int n) {
+    vi divs;
+    for (int i = 1; i * i <= n; ++i) {
+        if (n % i == 0) {
+            divs.push_back(i);
+            if (i * i != n) {
+                divs.push_back(n / i);
+            }
+        }
+    }
+    return divs;
+}
 
+bool is_achievable(int d, int n, const vector<int> &a) {
+    int fit_fail = -1, lst_fail = -1;
+    for (int i = 0; i < n; ++i) {
+        if (a[i] % d != 0) {
+            if (fit_fail == -1) {
+                fit_fail = i;
+            }
+            lst_fail = i;
+        }
+    }
+
+    // all eles are d's div
+    if (fit_fail == -1) return true;
+
+    int yu = a[fit_fail] % d;
+    for (int i = fit_fail; i <= lst_fail; ++i) {
+        if (a[i] % d != yu) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void solve() {
+    int n;
+    read(n);
+    vi a(n);
+    bool flag = true;
+    for (int i = 0; i < n; ++i) {
+        read(a[i]);
+        if (i > 0 && a[i] != a[0]) {
+            flag = false;
+        }
+    }
+
+    if (n <= 1 || (n > 1 && flag)) {
+        write(0, '\n');
+        return;
+    }
+
+    int ans = 1;
+
+    // op1 all
+    int g_full = 0;
+    for (int i = 1; i < n; ++i) {
+        g_full = gcd(g_full, abs(a[i] - a[0]));
+    }
+    ans = max(ans, g_full);
+
+    // op2
+    // must be divs
+    set<int> cand_st;
+    vi divs1 = get_divs(a[0]);
+    vi divsn = get_divs(a[n - 1]);
+    for (int d : divs1) cand_st.insert(d);
+    for (int d : divsn) cand_st.insert(d);
+
+    vi alcand(cand_st.begin(), cand_st.end());
+    sort(alcand.rbegin(), alcand.rend());
+
+    for (int d : alcand) {
+        if (d <= ans) break;
+        if (is_achievable(d, n, a)) ans = d;
+    }
+    write(ans, '\n');
 }
 
 signed main() {

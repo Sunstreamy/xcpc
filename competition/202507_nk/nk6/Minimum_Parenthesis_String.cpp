@@ -1,7 +1,7 @@
 #pragma GCC optimize(2)
 #include <bits/stdc++.h>
 namespace IO {
-constexpr int BUF_SIZE = 1 << 22;
+const int BUF_SIZE = 1 << 22;
 char in_buf[BUF_SIZE], out_buf[BUF_SIZE], *p_in = in_buf + BUF_SIZE, *p_out = out_buf;
 char stk[50];
 
@@ -95,7 +95,7 @@ struct Flusher {
 
 #undef gc
 #undef pc
-}  
+}  // namespace IO
 using namespace std;
 using namespace IO;
 using i64 = long long;
@@ -114,14 +114,68 @@ using vvp = vector<vector<pair<i64, i64>>>;
 #define fd(i, r, l) for (int i = (r); i >= (l); --i)
 #define int long long
 
-constexpr int M = 998244353;
-constexpr i64 linf = 0x3f3f3f3f3f3f3f3fLL;
-constexpr int maxm = 400005;
-constexpr int maxn = 200005;
+const int M = 1e9 + 7;
+const i64 linf = 0x3f3f3f3f3f3f3f3fLL;
+const int maxm = 400005;
+const int maxn = 200005;
 //------------------------------------------------------------------
+struct pr {
+    int l, r;
+};
+bool cmp(pr a, pr b) {
+    if (a.l != b.l) return a.l > b.l;
+    return a.r > b.r;
+}
 
 void solve() {
-
+    int n, m;
+    read(n, m);
+    vector<pr> prs(m);
+    int lst = 2 * n + 1;
+    fu(i, 0, m) read(prs[i].l, prs[i].r);
+    sort(prs.begin(), prs.end(), cmp);
+    int cnt = 0;
+    vector<bool> ok(2 * n + 1, false);
+    for (auto &tt : prs) {
+        if (tt.r < lst) {
+            if (!ok[tt.l]) {
+                ok[tt.l] = true;
+                cnt++;
+            }
+            lst = tt.l;
+        }
+    }
+    if (cnt > n) {
+        write(-1, '\n');
+        return;
+    }
+    for (int i = 1; i <= 2 * n && cnt < n; ++i) {
+        if (!ok[i]) {
+            ok[i] = true;
+            cnt++;
+        }
+    }
+    string ans = "";
+    ans.reserve(2 * n);
+    int balance = 0;
+    for (int i = 1; i <= 2 * n; ++i) {
+        if (ok[i]) {
+            ans+= '(';
+            balance++;
+        } else {
+            ans+= ')';
+            balance--;
+        }
+        if (balance < 0) {
+            write(-1, '\n');
+            return;
+        }
+    }
+    if (balance != 0) {
+        write(-1, "\n");
+        return;
+    }
+    write(ans, '\n');
 }
 
 signed main() {
