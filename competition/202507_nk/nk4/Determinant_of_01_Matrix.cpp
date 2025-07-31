@@ -94,7 +94,7 @@ struct Flusher {
 
 #undef gc
 #undef pc
-}  
+}  // namespace IO
 using namespace std;
 using namespace IO;
 using i64 = long long;
@@ -118,12 +118,40 @@ constexpr i64 linf = 0x3f3f3f3f3f3f3f3fLL;
 constexpr int maxm = 400005;
 constexpr int maxn = 200005;
 //------------------------------------------------------------------
-
-void solve() {}
+// 1 1 0
+// 0 1 1
+// 1 0 1
+//
+void solve() {
+    int n;
+    read(n);
+    constexpr int k = 29;
+    vii a(3 * k + 1, vi(3 * k + 1));
+    // 放置 k 个 “积木块”（generator blocks）。每个积木块负责产生一个 *2 的因子。
+    fo(i, 0, k - 1) {
+        a[3 * i + 1][3 * i] = 1;
+        a[3 * i + 1][3 * i + 1] = 1;
+        a[3 * i + 1][3 * i + 2] = 1;
+        a[3 * i + 2][3 * i + 2] = 1;
+        a[3 * i + 2][3 * i + 3] = 1;
+        a[3 * i + 3][3 * i + 1] = 1;
+        a[3 * i + 3][3 * i + 3] = 1;
+    }
+    fo(i, 0, k) {
+        if (n >> i & 1) {
+            a[0][3 * (k - i)] = 1;
+        }
+    }
+    write(3 * k + 1, '\n');
+    fo(i, 0, 3 * k) {
+        fo(j, 0, 3 * k) {
+            write(a[i][j], ' ');
+            if (j == 3 * k) write('\n');
+        }
+    }
+}
 
 signed main() {
-    int _;
-    read(_);
-    while (_--) solve();
+    solve();
     return 0;
 }
