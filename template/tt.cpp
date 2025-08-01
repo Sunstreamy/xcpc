@@ -3,7 +3,7 @@ using namespace std;
 #define int long long
 
 void solve() {
-    int 
+
 }
 
 signed main() {
