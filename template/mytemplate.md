@@ -336,12 +336,12 @@ struct mstk {
     int n;
     vector<edge> edges;
 
-    mstk(int n_,int m_):n(n_){
+    mstk(int n_, int m_) : n(n_) {
         edges.reserve(m_);
     }
 
     void ad(int u, int v, int w) {
-        edges.emplace_back(u, v, w);
+        edges.push_back({u, v, w});
     }
 
     i64 run() {
@@ -366,7 +366,7 @@ void solve() {
 
     mstk mst(n, m);
 
-    fu(i,0,m){
+    fu(i, 0, m) {
         int u, v, w;
         read(u, v, w);
         mst.ad(u, v, w);
