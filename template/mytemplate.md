@@ -179,6 +179,7 @@ i64 qpow(i64 a, int m) {
 ```
 
 ### 逆元
+
 ```cpp
 //费马小定理求逆元（MOD$ 必须是质数，且需要满足 x 与nod互质
 i64 inverse1(i64 a, i64 n) { 

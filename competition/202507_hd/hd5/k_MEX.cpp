@@ -94,7 +94,7 @@ struct Flusher {
 
 #undef gc
 #undef pc
-}  
+}  // namespace IO
 using namespace std;
 using namespace IO;
 using i64 = long long;
@@ -118,9 +118,21 @@ constexpr i64 linf = 0x3f3f3f3f3f3f3f3fLL;
 constexpr int maxm = 400005;
 constexpr int maxn = 200005;
 //------------------------------------------------------------------
+i64 qpow(i64 a, int m) {
+    i64 ans = 1;
+    while (m) {
+        if (m & 1) ans = ans * a % M;
+        a = a * a % M;
+        m >>= 1;
+    }
+    return ans;
+}
 
 void solve() {
-    
+    int n, k;
+    read(n, k);
+    int inv = qpow(n - k + 1, M - 2);
+    write(k * inv % M, '\n');
 }
 
 signed main() {

@@ -1,9 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define int long long
+constexpr int mod = 998244353;
 
 void solve() {
-
+    
 }
 
 signed main() {
