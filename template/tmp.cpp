@@ -109,9 +109,7 @@ using pii = pair<i64, i64>;
 using vp = vector<pair<i64, i64>>;
 using vvp = vector<vector<pair<i64, i64>>>;
 #define fo(i, l, r) for (int i = (l); i <= (r); ++i)
-#define fu(i, l, r) for (int i = (l); i < (r); ++i)
 #define fd(i, r, l) for (int i = (r); i >= (l); --i)
-#define int long long
 
 constexpr int M = 1e9 + 7;
 constexpr i64 linf = 0x3f3f3f3f3f3f3f3fLL;
@@ -123,7 +121,7 @@ void solve() {
 
 }
 
-signed main() {
+int main() {
     int _;
     read(_);
     while (_--) solve();
