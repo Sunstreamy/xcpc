@@ -11,6 +11,9 @@
   - [数论](#数论)
     - [快速幂](#快速幂)
     - [逆元](#逆元)
+    - [组合数](#组合数)
+      - [第一类斯特林数](#第一类斯特林数)
+    - [容斥原理](#容斥原理)
   - [图论](#图论)
     - [Dijkstra](#dijkstra)
     - [最小生成树 (MST)](#最小生成树-mst)
@@ -150,28 +153,32 @@ struct Fenwick {
 ### 快速幂
 
 ```cpp
-i64 qmul(i64 a, i64 b) {
+//防爆mul
+i64 hmul(i64 a, i64 b) {
     return (i128)a * b % mod;
 }
 
-i64 mulh(i64 a, i64 b) {//手写乘法
-    i64 ans = 0;
-    a %= mod;
+i64 hmul(i64 a, i64 b, i64 m) {
+    i64 ans= 0;
+    a %= m;
     while (b > 0) {
         if (b & 1) {
-            ans = (ans + a) % mod;
+            ans = (ans + a) % m;
         }
-        a = (a * 2) % mod;
+        a = (a * 2) % m;
         b >>= 1;
     }
     return ans;
 }
-i64 qpow(i64 a, int m) {
-    i64 ans = 1;
-    while (m) {
-        if (m & 1) ans = ans * a % mod;
-        a = a * a % mod;//a=mulh(a,a)
-        m >>= 1;
+
+i64 qpow(i64 a, int b) {
+    i64 ans = 1 % mod;
+    while (b) {
+        if (b & 1) {
+            ans = ans * a % mod;
+        }
+        a = a * a % mod;//a=hmul(a,a)
+        b >>= 1;
     }
     return ans;
 }
@@ -180,13 +187,19 @@ i64 qpow(i64 a, int m) {
 ### 逆元
 
 ```cpp
-//费马小定理求逆元（MOD$ 必须是质数，且需要满足 x 与nod互质
+//费马小定理求逆元（mod必须是质数，且需要满足 x 与nod互质
 i64 inverse1(i64 a, i64 n) { 
     return qpow(a, n - 2);
 }
 
 //
 ```
+
+### 组合数
+
+#### 第一类斯特林数
+
+### 容斥原理 
 
 ## 图论
 
