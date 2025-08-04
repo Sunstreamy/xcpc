@@ -3,6 +3,9 @@
 
 - [算法模板库](#算法模板库)
   - [基础算法](#基础算法)
+    - [IO](#io)
+    - [大整数](#大整数)
+    - [进制转换](#进制转换)
     - [离散化](#离散化)
   - [数据结构](#数据结构)
     - [并查集 (DSU) - 路径压缩 + 按秩序合并](#并查集-dsu---路径压缩--按秩序合并)
@@ -28,6 +31,179 @@
 
 
 ## 基础算法
+
+### IO
+```cpp
+#pragma GCC optimize(2)
+#include <bits/stdc++.h>
+namespace IO {
+constexpr int BUF_SIZE = 1 << 22;
+char in_buf[BUF_SIZE], out_buf[BUF_SIZE], *p_in = in_buf + BUF_SIZE, *p_out = out_buf;
+char stk[50];
+
+#define gc() (p_in == in_buf + BUF_SIZE ? (fread(in_buf, 1, BUF_SIZE, stdin), p_in = in_buf, *p_in++) : *p_in++)
+#define pc(x) \
+    (*p_out++ = (x), p_out == out_buf + BUF_SIZE ? (fwrite(out_buf, 1, BUF_SIZE, stdout), p_out = out_buf) : 0)
+
+template <typename T>
+inline void read(T &x) {
+    x = 0;
+    bool f = false;
+    char c = gc();
+    while (!isdigit(c)) {
+        if (c == '-') f = true;
+        c = gc();
+    }
+    while (isdigit(c)) {
+        x = x * 10 + (c ^ 48);
+        c = gc();
+    }
+    if (f) x = -x;
+}
+inline void read(char &c) {
+    c = gc();
+    while (!isgraph(c)) c = gc();
+}
+inline void read(std::string &s) {
+    s.clear();
+    char c = gc();
+    while (!isgraph(c)) c = gc();
+    while (isgraph(c)) {
+        s += c;
+        c = gc();
+    }
+}
+inline void getline(std::string &s) {
+    s.clear();
+    char c = gc();
+    while (c == '\n' || c == '\r') {  // 吃掉行首的换行符
+        c = gc();
+    }
+    while (c != '\n' && c != '\r' && c != EOF) {
+        s += c;
+        c = gc();
+    }
+}
+template <typename T, typename... Args>
+inline void read(T &x, Args &...args) {
+    read(x);
+    read(args...);
+}
+template <typename T>
+inline void write(T x) {
+    if (x < 0) {
+        pc('-');
+        x = -x;
+    }
+    if (x == 0) {
+        pc('0');
+        return;
+    }
+    int top = 0;
+    while (x) {
+        stk[++top] = (x % 10) ^ 48;
+        x /= 10;
+    }
+    while (top) pc(stk[top--]);
+}
+inline void write(char c) {
+    pc(c);
+}
+inline void write(const char *s) {
+    while (*s) pc(*s++);
+}
+inline void write(const std::string &s) {
+    for (char c : s) pc(c);
+}
+template <typename T, typename... Args>
+inline void write(T x, Args... args) {
+    write(x);
+    write(args...);
+}
+struct Flusher {
+    ~Flusher() {
+        if (p_out != out_buf) {
+            fwrite(out_buf, 1, p_out - out_buf, stdout);
+            p_out = out_buf;
+        }
+    }
+} flusher;
+
+#undef gc
+#undef pc
+}
+using namespace IO;
+```
+### 大整数
+
+ 
+
+### 进制转换
+
+```cpp
+struct converter {
+    // mp:  用于将字符（'0'-'9', 'a'-'z', 'a'-'z'）映射为对应的整数（0-61）。
+    // mp2: 用于将整数（0-61）映射回对应的字符。
+    vector<int> mp;
+    vector<char> mp2;
+
+    Converter() : mp(123), mp2(62) {
+        // 映射数字 '0' 到 '9'
+        for (int i = 0; i < 10; ++i) {
+            mp['0' + i] = i;
+            mp2[i] = '0' + i;
+        }
+        // 映射大写字母 'A' 到 'Z'
+        for (int i = 0; i < 26; ++i) {
+            mp['A' + i] = i + 10;
+            mp2[i + 10] = 'A' + i;
+        }
+        // 映射小写字母 'a' 到 'z'
+        for (int i = 0; i < 26; ++i) {
+            mp['a' + i] = i + 36;
+            mp2[i + 36] = 'a' + i;
+        }
+    }
+
+    // 转换前进制 转换后进制 要转换的数据
+    string solve(int a, int b, const string &s) {
+        vector<int> nums, ans;
+        for (auto c : s) {
+            nums.push_back(mp[c]);
+        }
+        reverse(nums.begin(), nums.end());
+        while (nums.size()) {  // 短除法，将整个大数一直除 b ，取余数
+            int remainder = 0;
+            for (int i = nums.size() - 1; i >= 0; i--) {
+                nums[i] += remainder * a;
+                remainder = nums[i] % b;
+                nums[i] /= b;
+            }
+            ans.push_back(remainder);  // 得到余数
+            while (nums.size() && nums.back() == 0) {
+                nums.pop_back();  // 去掉前导 0
+            }
+        }
+        reverse(ans.begin(), ans.end());
+
+        string restr;
+        for (int i : ans) restr += mp2[i];
+        return restr;
+    }
+};
+// usage
+void solve() {
+    Converter con;
+
+    // 16->10
+    int ori = 16, tar = 10;
+    string num = "1A";
+
+    string ans = con.solve(ori, tar, num);
+    cout << ans;
+    // 16进制的 "1A" 是 1*16 + 10 = 26
+}
+```
 
 ### 离散化
 
