@@ -18,7 +18,8 @@
     - [快速幂](#快速幂)
     - [逆元](#逆元)
     - [组合数](#组合数)
-      - [逆元+lucas定理](#逆元lucas定理)
+      - [逆元+预处理](#逆元预处理)
+      - [lucas定理](#lucas定理)
       - [质因数分解](#质因数分解)
       - [杨辉三角（精确计算）](#杨辉三角精确计算)
     - [第一类斯特林数](#第一类斯特林数)
@@ -158,7 +159,7 @@ template<class T> constexpr T power(int n) {
     return mypow(T(2), n);
 }
 
-template<const int &MOD> struct Zmod {
+template<int MOD> struct Zmod {
     int x;
     Zmod(signed x = 0) : x(norm(x % MOD)) {}
     Zmod(i64 x) : x(norm(x % MOD)) {}
@@ -260,8 +261,8 @@ template<const int &MOD> struct Zmod {
     }
 };
 
-int MOD[] = {998244353, 1000000007};
-using Z = Zmod<MOD[1]>;
+constexpr int M = MOD[1];
+using Z = Zmod<M>;
 ```
 
 ### 大整数
@@ -1012,104 +1013,59 @@ i64 inverse1(i64 a, i64 n) {
 
 ### 组合数
 
-#### 逆元+lucas定理
+#### 逆元+预处理
+
+[取模运算](#取模运算)
 
 ```cpp
+
+// 场景: n, m 较小 (< 10^7), 模数 P 是一个大质数。
+// O(N) 预处理, O(1) 查询。
 struct Comb {
-    int n;
-    vector<Z> _fac, _inv;
+    int n_mx;
+    vector<Z> _fac, _invfac;
  
-    Comb() : _fac{1}, _inv{0} {}
-    Comb(int n) : Comb() {
-        init(n);
-    }
+    Comb() : n_mx{0}, _fac{1}, _invfac{1} {}
+    
+    //init函数实现增量式初始化, 避免重复计算
     void init(int m) {
-        if (m <= n) return;
-        _fac.resize(m + 1);
-        _inv.resize(m + 1);
-        for (int i = n + 1; i <= m; i++) {
+        if (m <= n_mx) return;
+        int prev_n = n_mx;
+        n_mx = m;
+        _fac.resize(n_mx + 1);
+        _invfac.resize(n_mx + 1);
+        for (int i = prev_n + 1; i <= n_mx; i++) {
             _fac[i] = _fac[i - 1] * i;
         }
-        _inv[m] = _fac[m].inv();
-        for (int i = m; i > n; i--) {
-            _inv[i - 1] = _inv[i] * i;
+        _invfac[n_mx] = _fac[n_mx].inv();
+        for (int i = n_mx; i > prev_n; i--) {
+            _invfac[i - 1] = _invfac[i] * i;
         }
-        n = m;
     }
-    Z fac(int x) {
-        if (x > n) init(x);
-        return _fac[x];
+    
+    //C 和 P 函数内部增加自动初始化
+    Z C(int n, int m) {
+        if (m < 0 || m > n) return 0;
+        if (n > n_mx) init(n);
+        return _fac[n] * _invfac[m] * _invfac[n - m];
     }
-    Z inv(int x) {
-        if (x > n) init(x);
-        return _inv[x];
+    
+    Z P(int n, int m) {
+        if (m < 0 || m > n) return 0;
+        if (n > n_mx) init(n); 
+        return _fac[n] * _invfac[n - m];
     }
-    Z C(int x, int y) {
-        if (x < 0 || y < 0 || x < y) return 0;
-        return fac(x) * inv(y) * inv(x - y);
-    }
-    Z P(int x, int y) {
-        if (x < 0 || y < 0 || x < y) return 0;
-        return fac(x) * inv(x - y);
-    }
-} comb(1 << 21);
+};
 ```
+#### lucas定理
 
 #### 质因数分解
-
-```cpp
-int n, m, p, b[10000005], prime[1000005], t, min_prime[10000005];
-void euler_Prime(int n) {  // 用欧拉筛求出1~n中每个数的最小质因数的编号是多少，保存在min_prime中
-    for (int i = 2; i <= n; i++) {
-        if (b[i] == 0) {
-            prime[++t] = i;
-            min_prime[i] = t;
-        }
-        for (int j = 1; j <= t && i * prime[j] <= n; j++) {
-            b[prime[j] * i] = 1;
-            min_prime[prime[j] * i] = j;
-            if (i % prime[j] == 0) break;
-        }
-    }
-}
-i64 c(int n, int m, int p) {  // 计算C(n,m)%p的值
-    euler_Prime(n);
-    int a[t + 5];                           // t代表1~n中质数的个数 ，a[i]代表编号为i的质数在答案中出现的次数
-    for (int i = 1; i <= t; i++) a[i] = 0;  // 注意清0，一开始是随机数
-    for (int i = n; i >= n - m + 1; i--) {  // 处理分子
-        int x = i;
-        while (x != 1) {
-            a[min_prime[x]]++;  // 注意min_prime中保存的是这个数的最小质因数的编号（1~t）
-            x /= prime[min_prime[x]];
-        }
-    }
-    for (int i = 1; i <= m; i++) {  // 处理分母
-        int x = i;
-        while (x != 1) {
-            a[min_prime[x]]--;
-            x /= prime[min_prime[x]];
-        }
-    }
-    i64 ans = 1;
-    for (int i = 1; i <= t; i++) {  // 枚举质数的编号，看它出现了几次
-        while (a[i] > 0) {
-            ans = ans * prime[i] % p;
-            a[i]--;
-        }
-    }
-    return ans;
-}
-int main() {
-    cin >> n >> m;
-    m = min(m, n - m);  // 小优化
-    cout << c(n, m, MOD);
-}
-```
 
 #### 杨辉三角（精确计算）
 
 ```cpp
-vector C(n + 1, vector<int>(n + 1));
+//<60,i64 <130,i128
+vector C(n + 1, vector<i64>(n + 1));
 C[0][0] = 1;
 for (int i = 1; i <= n; i++) {
     C[i][0] = 1;
