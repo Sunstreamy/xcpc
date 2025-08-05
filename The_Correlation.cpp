@@ -12,32 +12,31 @@ constexpr i64 linf = 0x3f3f3f3f3f3f3f3fLL;
 constexpr int maxm = 400005;
 constexpr int maxn = 200005;
 //------------------------------------------------------------------
-i64 qpow(int a,)
 
 void solve() {
-    int n, m;
-    cin >> n >> m;
-    vector<int> a(n);
-    for (int i = 0; i < n; i++) {
+    int n;
+    cin >> n;
+    vector<i64> a(n);
+    for (int i = 0; i < n; ++i) {
         cin >> a[i];
     }
-    if (n == 1) {
-        cout << __builtin_popcount(a[0] + m) << '\n';
+    bool flag = true;
+    for (int i = 1; i < n; ++i) {
+        if (a[i] != a[0]) {
+            flag = false;
+            break;
+        }
     }
-
-    i64 cur = qpow(n - 1, m);
-    i64 ans = 0;
-    for (int k = 0; k <= m; ++k) {
-        i64 cmk = comb(m, k);
-        ans+=comb(m,k)*cur
+    if(flag){
+        cout << 0 << '\n';
+        return;
     }
+    cout << n - 1 << '\n';
 }
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    int _;
-    cin >> _;
-    while (_--) solve();
+    solve();
     return 0;
 }
