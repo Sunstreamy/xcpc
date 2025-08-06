@@ -31,12 +31,7 @@
     - [最小生成树 (MST)](#最小生成树-mst)
       - [Kruskal](#kruskal)
       - [Prim](#prim)
-  - [树算法](#树算法)
   - [动态规划](#动态规划)
-  - [网络流](#网络流)
-  - [匹配算法](#匹配算法)
-  - [莫队算法](#莫队算法)
-  - [高精度](#高精度)
 
 
 ## 基础算法
@@ -890,10 +885,10 @@ struct Disc {
 ### 并查集 (DSU) - 路径压缩 + 按秩序合并
 
 ```cpp
-struct dsu {
-    vi fa, sz;
+struct Dsu {
+    vector<int> fa, sz;
 
-    dsu(int n) : fa(n + 1), sz(n + 1, 1) {
+    Dsu(int n) : fa(n + 1), sz(n + 1, 1) {
         iota(fa.begin(), fa.end(), 0);
     }
     int find(int x) {
@@ -903,11 +898,13 @@ struct dsu {
         return x;
     }
     bool mg(int x, int y) {
-        x = find(x), y = find(y);
-        if (x == y) return false;
-        if (sz[x] < sz[y]) swap(x, y);
-        fa[y] = x;
-        sz[x] += sz[y];
+        int fx = find(x), fy = find(y);
+        if (fx == fy) return false;
+        if (sz[fx] < sz[fy]) {
+            swap(fx, fy);
+        }
+        fa[fy] = fx;
+        sz[fx] += sz[fy];
         return true;
     }
     bool same(int x, int y) {
@@ -983,7 +980,7 @@ i64 hmul(i64 a, i64 b, i64 mod) {
         if (b & 1) {
             ans = (ans + a) % mod;
         }
-        a = (a * 2) % mod;
+        a = a * 2 % mod;
         b >>= 1;
     }
     return ans;
@@ -994,9 +991,9 @@ i64 qpow(i64 n, i64 k,i64 mod) {
     n %= mod;
     while (k) {
         if (k & 1) {
-            r = (r * n) % mod;
+            r = r * n % mod;
         }
-        n = (n * n) % mod;
+        n = n * n % mod;
         k >>= 1;
     }
     return r;
@@ -1020,25 +1017,11 @@ i64 inv(i64 a) {
 
 ##### 学习版
 
+[快速幂](#快速幂)
+[逆元](#逆元)
+
 ```cpp
 i64 fac[maxm], invfac[maxm];
-
-i64 qpow(i64 n, i64 k) {
-    i64 r = 1;
-    n %= mod;
-    while (k) {
-        if (k & 1) {
-            r = (r * n) % mod;
-        }
-        n = (n * n) % mod;
-        k >>= 1;
-    }
-    return r;
-}
-
-i64 inv(i64 n) {
-    return qpow(n, mod - 2);
-}
 
 void init(int n) {
     fac[0] = 1;
@@ -1355,27 +1338,7 @@ struct mstp {
 ```
 
 
-
-## 树算法
-<!-- 在这里开始添加你的“树算法”模板，比如LCA、点分治、树链剖分等 -->
-
-
 ## 动态规划
 <!-- 在这里开始添加你的“动态规划”模板，比如背包DP、区间DP、插头DP等 -->
 
-
-## 网络流
-<!-- 在这里开始添加你的“网络流”模板，比如Dinic、MCMF等 -->
-
-
-## 匹配算法
-<!-- 在这里开始添加你的“匹配算法”模板，比如匈牙利算法、KM算法等 -->
-
-
-## 莫队算法
-<!-- 在这里开始添加你的“莫队算法”模板，比如普通莫队、带修改莫队等 -->
-
-
-## 高精度
-<!-- 在这里开始添加你的“高精度”模板，比如大整数类、分数类等 -->
-
+jk

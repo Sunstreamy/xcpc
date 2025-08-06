@@ -3,16 +3,17 @@ using namespace std;
 using i64 = long long;
 constexpr int mod = 998244353;
 
-i64 qpow(int a, int b) {
-    i64 ans = 1 % mod;
-    while (b) {
-        if (b & 1) {
-            ans = ans * a % mod;
+i64 qpow(int n, int k) {
+    i64 r = 1;
+    n %= mod;
+    while (k) {
+        if (k & 1) {
+            r = (r * n) % mod;
         }
-        a = a * a % mod;
-        b >>= 1;
+        n = n * n % mod;
+        k >>= 1;
     }
-    return ans;
+    return r;
 }
 
 void solve() {
