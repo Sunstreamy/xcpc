@@ -7,14 +7,14 @@ using u128 = unsigned __int128;
 using i128 = __int128;
 using b20 = bitset<20>;
 
-constexpr int M = 1e9 + 7;
+constexpr int MOD[] = {998244353, 1000000007};
 constexpr i64 linf = 0x3f3f3f3f3f3f3f3fLL;
 constexpr int maxm = 400005;
 constexpr int maxn = 200005;
 //------------------------------------------------------------------
 
 void solve() {
-
+    
 }
 
 int main() {

@@ -19,6 +19,8 @@
     - [逆元](#逆元)
     - [组合数](#组合数)
       - [逆元+预处理](#逆元预处理)
+        - [学习版](#学习版-1)
+        - [铁板](#铁板)
       - [lucas定理](#lucas定理)
       - [质因数分解](#质因数分解)
       - [杨辉三角（精确计算）](#杨辉三角精确计算)
@@ -974,38 +976,39 @@ i64 hmul(i64 a, i64 b) {
     return (i128)a * b % mod;
 }
 
-i64 hmul(i64 a, i64 b, i64 m) {
+i64 hmul(i64 a, i64 b, i64 mod) {
     i64 ans= 0;
-    a %= m;
-    while (b > 0) {
+    a %= mod;
+    while (b) {
         if (b & 1) {
-            ans = (ans + a) % m;
+            ans = (ans + a) % mod;
         }
-        a = (a * 2) % m;
+        a = (a * 2) % mod;
         b >>= 1;
     }
     return ans;
 }
 
-i64 qpow(i64 a, int b) {
-    i64 ans = 1 % mod;
-    while (b) {
-        if (b & 1) {
-            ans = ans * a % mod;
+i64 qpow(i64 n, i64 k,i64 mod) {
+    i64 r = 1;
+    n %= mod;
+    while (k) {
+        if (k & 1) {
+            r = (r * n) % mod;
         }
-        a = a * a % mod;//a=hmul(a,a)
-        b >>= 1;
+        n = (n * n) % mod;
+        k >>= 1;
     }
-    return ans;
+    return r;
 }
 ```
 
 ### 逆元
 
 ```cpp
-//费马小定理求逆元（mod必须是质数，且需要满足 x 与nod互质
-i64 inverse1(i64 a, i64 n) { 
-    return qpow(a, n - 2);
+//费马小定理求逆元（mod必须是质数，且需要满足 x 与mod互质
+i64 inv(i64 a) { 
+    return qpow(a, mod- 2);
 }
 
 //
@@ -1014,6 +1017,48 @@ i64 inverse1(i64 a, i64 n) {
 ### 组合数
 
 #### 逆元+预处理
+
+##### 学习版
+
+```cpp
+i64 fac[maxm], invfac[maxm];
+
+i64 qpow(i64 n, i64 k) {
+    i64 r = 1;
+    n %= mod;
+    while (k) {
+        if (k & 1) {
+            r = (r * n) % mod;
+        }
+        n = (n * n) % mod;
+        k >>= 1;
+    }
+    return r;
+}
+
+i64 inv(i64 n) {
+    return qpow(n, mod - 2);
+}
+
+void init(int n) {
+    fac[0] = 1;
+    invfac[0] = 1;
+    for (int i = 1; i <= n; ++i) {
+        fac[i] = (fac[i - 1] * i) % mod;
+    }
+    // 计算最大阶乘的逆元，然后递推
+    invfac[n] = inv(fac[n], mod);
+    for (int i = n - 1; i >= 1; --i) {
+        invfac[i] = (invfac[i + 1] * (i + 1)) % mod;
+    }
+}
+
+i64 comb(int n, int m) {
+    return (((fac[n] * invfac[m]) % mod) * invfac[n - m]) % mod;
+}
+```
+
+##### 铁板
 
 [取模运算](#取模运算)
 
