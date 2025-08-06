@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
-
-using ll = long long;
+using i64 = long long;
 using namespace std;
 
 int dx[] = {-1, 0, 1, 0};
@@ -8,10 +7,10 @@ int dy[] = {0, 1, 0, -1};
 
 int n;
 vector<string> grid(2);
-char current_type;
+char cur;
 
 void dfs(int x, int y) {
-    if (x < 0 || x >= 2 || y < 0 || y >= n || grid[x][y] != current_type) {
+    if (x < 0 || x >= 2 || y < 0 || y >= n || grid[x][y] != cur) {
         return;
     }
 
@@ -34,7 +33,7 @@ void solve() {
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < n; j++) {
             if (grid[i][j] != '#') {
-                current_type = grid[i][j];
+                cur = grid[i][j];
                 dfs(i, j);
                 cnt++;
             }
