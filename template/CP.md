@@ -142,7 +142,7 @@ using namespace IO;
 ### 取模运算
 
 ```cpp
-template<class T> constexpr T mypow(T n, i64 k) {
+template <typename T> constexpr T mypow(T n, i64 k) {
     T r = 1;
     for (; k; k /= 2, n *= n) {
         if (k & 1) {
@@ -886,31 +886,43 @@ struct Disc {
 
 ```cpp
 struct Dsu {
-    vector<int> fa, sz;
+    vector<int> fa, sz, ed;
+    vector<bool> cy;
 
-    Dsu(int n) : fa(n + 1), sz(n + 1, 1) {
+    Dsu(int n) : fa(n + 1), sz(n + 1, 1), ed(n + 1), cy(n + 1, false) {
         iota(fa.begin(), fa.end(), 0);
     }
     int find(int x) {
-        while (x != fa[x]) {
-            x = fa[x] = fa[fa[x]];
-        }
-        return x;
+        if (fa[x] == x) return x;
+        return fa[x] = find(fa[x]);
     }
     bool mg(int x, int y) {
         int fx = find(x), fy = find(y);
-        if (fx == fy) return false;
+        if (fx == fy) {
+            ed[fx]++;
+            cy[fx] = true;
+            return false;
+        }
         if (sz[fx] < sz[fy]) {
             swap(fx, fy);
         }
         fa[fy] = fx;
         sz[fx] += sz[fy];
+        ed[fx] += ed[fy];
+        ed[fx]++;
+        cy[fx] = cy[fx] || cy[fy];
         return true;
     }
     bool same(int x, int y) {
         return find(x) == find(y);
     }
-    int size(int x) {
+    bool sc(int x) {
+        return cy[find(x)];
+    }
+    int ecnt(int x) {
+        return ed[find(x)];
+    }
+    int pcnt(int x) {
         return sz[find(x)];
     }
 };
