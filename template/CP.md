@@ -1339,37 +1339,34 @@ void solve() {
 #### Kruskal
 
 ```cpp
-struct mstk {
-    struct edge {
+struct Mstk {
+    struct Edge {
         int u, v, w;
-        bool operator<(const edge& other) const {
+        bool operator<(const Edge& other) const {
             return w < other.w;
         }
     };
-
     int n;
-    vector<edge> edges;
-
-    mstk(int n_, int m_) : n(n_) {
+    vector<Edge> edges;
+    Mstk(int n_, int m_) : n(n_) {
         edges.reserve(m_);
     }
-
     void ad(int u, int v, int w) {
         edges.push_back({u, v, w});
     }
-
     i64 run() {
         sort(edges.begin(), edges.end());
-        dsu dt(n);
-        i64 totalw = 0;
+        Dsu dt(n);
+        i64 mnw = 0;
+
         int cnt = 0;
-        for (const auto& e : edges) {
-            if (dt.mg(e.u, e.v)) {
-                totalw += e.w;
-                cnt++;
+        for (const auto& t : edges) {
+            if (dt.mg(t.u, t.v)) {
+                mnw += t.w;
+                ++cnt;
             }
         }
-        return (cnt == n - 1) ? totalw : -1;
+        return (cnt == n - 1) ? mnw : -1;
     }
 };
 

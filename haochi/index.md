@@ -69,6 +69,8 @@
 *   [https://vjudge.net/problem/HDU-3038](./data_structure/How_Many_Answers_Are_Wrong.cpp)
 *   [https://vjudge.net/problem/ZOJ-3261#author=GPT_zh](./data_structure/Connections_in_Galaxy_War.cpp)
 *   [https://www.luogu.com.cn/problem/P1455](./data_structure/P_1455_搭配购买.cpp)
+*   [https://vjudge.net/problem/POJ-1182](./data_structure/E_食物链.cpp)
+*   [https://vjudge.net/problem/POJ-1417](./data_structure/True_Liars.cpp)
 
 ## 数论 (Number Theory)
 *   [小红的双排列期望](./Number_Theory/%E5%B0%8F%E7%BA%A2%E7%9A%84%E5%8F%8C%E6%8E%92%E5%88%97%E6%9C%9F%E6%9C%9B_easy.cpp)
