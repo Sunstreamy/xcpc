@@ -71,9 +71,15 @@
 *   [https://www.luogu.com.cn/problem/P1455](./data_structure/P_1455_搭配购买.cpp)
 *   [https://vjudge.net/problem/POJ-1182](./data_structure/E_食物链.cpp)
 *   [https://vjudge.net/problem/POJ-1417](./data_structure/True_Liars.cpp)
+    [https://vjudge.net/problem/POJ-1456](./data_structure/Supermarket.cpp)
 
-## 数论 (Number Theory)
+
+## 数论 
 *   [小红的双排列期望](./Number_Theory/%E5%B0%8F%E7%BA%A2%E7%9A%84%E5%8F%8C%E6%8E%92%E5%88%97%E6%9C%9F%E6%9C%9B_easy.cpp)
 
+## 几何
 
-## 字符串 (String)
+### 曼哈顿距离
+*   [https://ac.nowcoder.com/acm/contest/108302/J](../competition/202507_nk/nk5/Fastest_Coverage_Problem.cpp)
+
+## 字符串

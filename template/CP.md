@@ -29,6 +29,8 @@
     - [容斥原理](#容斥原理)
   - [图论](#图论)
     - [Dijkstra](#dijkstra)
+      - [堆优化版](#堆优化版)
+      - [朴素版](#朴素版)
     - [最小生成树 (MST)](#最小生成树-mst)
       - [Kruskal](#kruskal)
       - [Prim](#prim)
@@ -1202,9 +1204,12 @@ cout << C[n][m] << endl;
 
 ### 容斥原理 
 
+
 ## 图论
 
 ### Dijkstra 
+
+#### 堆优化版
 
 ```cpp
 // 堆优化O(M log N)
@@ -1259,6 +1264,10 @@ struct fdijkstra {
         return path;
     }
 };
+```
+#### 朴素版
+
+```cpp
 // 朴素：o(n^2)，适用于 m 比较大，n(顶点) 很小的情况
 struct sdijkstra {
     int n;
