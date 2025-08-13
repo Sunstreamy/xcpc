@@ -31,6 +31,7 @@
     - [Dijkstra](#dijkstra)
       - [堆优化版](#堆优化版)
       - [朴素版](#朴素版)
+      - [usage](#usage)
     - [最小生成树 (MST)](#最小生成树-mst)
       - [Kruskal](#kruskal)
       - [Prim](#prim)
@@ -1219,7 +1220,7 @@ struct Fdijkstra {
     vector<i64> dist;
     vector<int> fa;  // fa 存储最短路树中的父节点，用于路径回溯
 
-    Dijkstra(int n_) : n(n_), adj(n_ + 1), dist(n_ + 1), fa(n_ + 1) {}
+    Fdijkstra(int n_) : n(n_), adj(n_ + 1), dist(n_ + 1), fa(n_ + 1) {}
 
     // 若无向图，需要为两个方向都添加边
     void add_edge(int u, int v, int w) {
@@ -1280,15 +1281,18 @@ struct Fdijkstra {
 
 ```cpp
 // 朴素：o(n^2)，适用于 m 比较大，n(顶点) 很小的情况
-struct sdijkstra {
+struct Sdijkstra {
     int n;
-    vii adj;
-    vi dist;
+    vector<vector<int>> adj;
+    vector<i64> dist;
     vector<bool> vis;
 
-    sdijkstra(int n_) : n(n_), adj(n_ + 1, vi(n_ + 1, linf)), dist(n_ + 1, linf), vis(n_ + 1, false) {
-        fo(i, 1, n) adj[i][i] = 0;
+    Sdijkstra(int n_) : n(n_), adj(n_ + 1, vector<int>(n_ + 1, inf)), dist(n_ + 1, linf), vis(n_ + 1, false) {
+        for (int i = 1; i <= n; ++i) {
+            adj[i][i] = 0;
+        }
     }
+
     void add_edge(int u, int v, int w) {
         adj[u][v] = min(adj[u][v], w);
     }
@@ -1297,57 +1301,61 @@ struct sdijkstra {
         fill(vis.begin(), vis.end(), false);
         dist[st] = 0;
 
-        fo(i, 1, n) {
+        for (int i = 1; i <= n; ++i) {
             int u = -1;
-            fo(j, 1, n) {
+            for (int j = 1; j <= n; ++j) {
                 if (!vis[j] && (u == -1 || dist[j] < dist[u])) u = j;
             }
 
-            if (u == -1 || dist[u] >= linf) break;
+            if (u == -1 || dist[u] >= linf) {
+                break;
+            }
             vis[u] = true;
 
-            fo(v, 1, n) {
-                if (dist[v] > dist[u] + adj[u][v]) {
+            for (int v = 1; v <= n; ++v) {
+                if (adj[u][v] != inf && dist[v] > dist[u] + adj[u][v]) {
                     dist[v] = dist[u] + adj[u][v];
                 }
             }
         }
     }
 };
+```
 
-// usage
+#### usage
+
+```cpp
 void solve() {
     int n, m, s;
-    read(n, m, s);  // 读入点数、边数、源点
+    cin >> n >> m >> s;
     Fdijkstra dij(n);
 
-    // 2. 添加所有边
-    fu(i, 0, m) {
+    for (int i = 0; i < m; ++i) {
         int u, v, w;
-        read(u, v, w);
+        cin >> u >> v >> w;
         dij.add_edge(u, v, w);
-        // 如果是无向图, 需额外添加: dij.add_edge(v, u, w);
+        // 无向图att
     }
 
     dij.run(s);  // 3. 从源点 s 开始运行算法
     // 4. 输出到各个点的最短距离
-    fo(i, 1, n) {
+    for (int i = 1; i <= n; ++i) {
         if (dij.dist[i] == linf) {
-            write(-1, ' ');
+            cout << -1 << ' ';
         } else {
-            write(dij.dist[i], ' ');
+            cout << dij.dist[i] << ' ';
         }
     }
-    write('\n');
+    cout << '\n';
 
     // (可选) 打印从源点 s 到终点 n 的路径
-    vi path = dij.get_path(n);
+    vector<int> path = dij.get_path(n);
     if (!path.empty()) {
-        write("Path to ", n, ": ");
-        fu(i, 0, path.size()) {
-            write(path[i], (i == path.size() - 1 ? "" : " -> "));
+        cout << "Path to " << n << ": ";
+        for (int i = 0; i < path.size(); ++i) {
+            cout << path[i] << (i == path.size() - 1 ? "" : " -> ");
         }
-        write('\n');
+        cout << '\n';
     }
 }
 ```
