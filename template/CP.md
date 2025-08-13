@@ -1213,23 +1213,27 @@ cout << C[n][m] << endl;
 
 ```cpp
 // 堆优化O(M log N)
-struct fdijkstra {
+struct Fdijkstra {
     int n;
-    vvp grid;
-    vi dist;
-    vi fa;  // 存储最短路树中的父节点，用于路径回溯
+    vector<vector<pair<int, int>>> adj;
+    vector<i64> dist;
+    vector<int> fa;  // fa 存储最短路树中的父节点，用于路径回溯
 
-    fdijkstra(int n_) : n(n_), grid(n_ + 1), dist(n_ + 1), fa(n_ + 1) {}
-    // 添加单向边,小心无向图
+    Dijkstra(int n_) : n(n_), adj(n_ + 1), dist(n_ + 1), fa(n_ + 1) {}
+
+    // 若无向图，需要为两个方向都添加边
     void add_edge(int u, int v, int w) {
-        grid[u].emplace_back(v, w);
+        adj[u].emplace_back(v, w);
     }
+
     void run(int start_node) {
+        // 初始化距离为无穷大，父节点为0
         fill(dist.begin(), dist.end(), linf);
         fill(fa.begin(), fa.end(), 0);
         dist[start_node] = 0;
 
-        using Node = pii;  // {distance, vertex}
+        using Node = pair<i64, int>;  // {distance, vertex}
+
         priority_queue<Node, vector<Node>, greater<Node>> pq;
         pq.push({0, start_node});
 
@@ -1237,10 +1241,11 @@ struct fdijkstra {
             auto [d, u] = pq.top();
             pq.pop();
 
-            if (d > dist[u]) continue;
+            if (d > dist[u]) {
+                continue;
+            }
 
-            // 3. 遍历邻接点并松弛
-            for (auto& edge : grid[u]) {
+            for (const auto& edge : adj[u]) {
                 auto [v, w] = edge;
                 if (dist[v] > dist[u] + w) {
                     dist[v] = dist[u] + w;
@@ -1252,14 +1257,20 @@ struct fdijkstra {
     }
 
     // 获取到终点 t 的最短路径
-    vi get_path(int t) {
-        vi path;
+    vector<int> get_path(int t) {
+        vector<int> path;
+
         if (dist[t] == linf) {
             return path;  // 不可达
         }
+
+        // 通过 fa 数组从终点回溯到起点，构建路径
+        // 循环在 t 变为 0 时终止（起点的父节点被初始化为0）
         for (; t != 0; t = fa[t]) {
             path.push_back(t);
         }
+
+        // 因为路径是反向构建的（从终点到起点），所以需要反转
         reverse(path.begin(), path.end());
         return path;
     }
