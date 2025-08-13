@@ -1216,7 +1216,7 @@ cout << C[n][m] << endl;
 // 堆优化O(M log N)
 struct Fdijkstra {
     int n;
-    vector<vector<pair<int, int>>> adj;
+    vector<vector<pair<int, i64>>> adj;
     vector<i64> dist;
     vector<int> fa;  // fa 存储最短路树中的父节点，用于路径回溯
 
