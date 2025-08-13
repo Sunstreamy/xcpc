@@ -35,6 +35,7 @@
     - [最小生成树 (MST)](#最小生成树-mst)
       - [Kruskal](#kruskal)
       - [Prim](#prim)
+    - [Bellman-Ford](#bellman-ford)
   - [动态规划](#动态规划)
 
 
@@ -1216,7 +1217,7 @@ cout << C[n][m] << endl;
 // 堆优化O(M log N)
 struct Fdijkstra {
     int n;
-    vector<vector<pair<int, i64>>> adj;
+    vector<vector<pair<int, int>>> adj;
     vector<i64> dist;
     vector<int> fa;  // fa 存储最短路树中的父节点，用于路径回溯
 
@@ -1227,16 +1228,16 @@ struct Fdijkstra {
         adj[u].emplace_back(v, w);
     }
 
-    void run(int start_node) {
-        // 初始化距离为无穷大，父节点为0
+    void run(int st) {
+        // 初始化距离为无穷大，父节点为0,从不同起点跑一次都要fill一次
         fill(dist.begin(), dist.end(), linf);
         fill(fa.begin(), fa.end(), 0);
-        dist[start_node] = 0;
+        dist[st] = 0;
 
         using Node = pair<i64, int>;  // {distance, vertex}
 
         priority_queue<Node, vector<Node>, greater<Node>> pq;
-        pq.push({0, start_node});
+        pq.push({0, st});
 
         while (!pq.empty()) {
             auto [d, u] = pq.top();
@@ -1451,6 +1452,51 @@ struct mstp {
             }
         }
         return (cnt == n) ? totalw : -1;
+    }
+};
+```
+
+### Bellman-Ford
+```cpp
+struct Bellman_Ford {
+    int n;
+    vector<tuple<int, int, i64>> edges;
+    vector<i64> dist;
+
+    Bellman_Ford(int n_) : n(n_), dist(n_ + 1) {}
+
+    void add_edge(int u, int v, i64 w) {
+        edges.emplace_back(u, v, w);
+    }
+
+    // 判断是否存在从起点可达的负权环
+    bool run(int st) {
+        fill(dist.begin(), dist.end(), linf);
+        dist[st] = 0;
+
+        // 核心：进行 n-1 轮松弛
+        for (int i = 1; i < n; ++i) {
+            bool updated = false;
+            for (const auto& edge : edges) {
+                auto [u, v, w] = edge;
+                if (dist[u] != linf && dist[v] > dist[u] + w) {
+                    dist[v] = dist[u] + w;
+                    updated = true;
+                }
+            }
+            if (!updated) break;
+        }
+
+        // 检测负权环：进行第 n 轮检查
+        for (const auto& edge : edges) {
+            auto [u, v, w] = edge;
+            if (dist[u] != linf && dist[v] > dist[u] + w) {
+                // 如果在第 n 轮仍然可以松弛，说明存在负权环
+                return false;
+            }
+        }
+
+        return true;
     }
 };
 ```

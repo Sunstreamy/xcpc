@@ -13,26 +13,22 @@ constexpr int maxm = 400005;
 constexpr int maxn = 200005;
 //------------------------------------------------------------------
 
-
 void solve() {
-    int n, m;
-    cin >> n >> m;
-
+    int n;
+    cin >> n;
+    cout << n << " nya" << '\n';
+    cin.ignore();
+    for (int i = 0; i < n; ++i) {
+        string cur;
+        getline(cin, cur);
+        cout << cur << " nya" << '\n';
+    }
 }
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int _;
-    cin >> _;
-    int cnt = 1;
-    while (_--) {
-        cout << "Scenario #" << cnt << ':';
-        solve();
-        cout << '\n';
-        cnt++;
-    }
-
+    solve();
     return 0;
 }
