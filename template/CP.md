@@ -1319,7 +1319,7 @@ struct sdijkstra {
 void solve() {
     int n, m, s;
     read(n, m, s);  // 读入点数、边数、源点
-    fdijkstra dij(n);
+    Fdijkstra dij(n);
 
     // 2. 添加所有边
     fu(i, 0, m) {
