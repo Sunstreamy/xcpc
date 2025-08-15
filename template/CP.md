@@ -27,6 +27,9 @@
       - [杨辉三角（精确计算）](#杨辉三角精确计算)
     - [第一类斯特林数](#第一类斯特林数)
     - [容斥原理](#容斥原理)
+    - [常见结论](#常见结论)
+    - [曲棍球棒恒等式：](#曲棍球棒恒等式)
+      - [](#)
   - [图论](#图论)
     - [Dijkstra](#dijkstra)
       - [堆优化版](#堆优化版)
@@ -1206,6 +1209,15 @@ cout << C[n][m] << endl;
 
 ### 容斥原理 
 
+### 常见结论
+### 曲棍球棒恒等式：
+
+$$\begin{cases}
+\sum_{i = r}^{n} C_{i}^{r} = C_{r}^{r} + C_{r + 1}^{r} + \cdots + C_{n}^{r} = C_{n + 1}^{r + 1} & \text{(形式一: 下标固定)} \\
+\sum_{i = k}^{n} C_{i}^{i - k} = C_{k}^{0} + C_{k + 1}^{1} + \cdots + C_{n}^{n - k} = C_{n + 1}^{k + 1} & \text{(形式二: 差值固定)}
+\end{cases}$$
+#### 
+
 
 ## 图论
 
@@ -1224,7 +1236,7 @@ struct Fdijkstra {
     Fdijkstra(int n_) : n(n_), adj(n_ + 1), dist(n_ + 1), fa(n_ + 1) {}
 
     // 若无向图，需要为两个方向都添加边
-    void add_edge(int u, int v, int w) {
+    void ad(int u, int v, int w) {
         adj[u].emplace_back(v, w);
     }
 
@@ -1294,7 +1306,7 @@ struct Sdijkstra {
         }
     }
 
-    void add_edge(int u, int v, int w) {
+    void ad(int u, int v, int w) {
         adj[u][v] = min(adj[u][v], w);
     }
     void run(int st) {
@@ -1334,7 +1346,7 @@ void solve() {
     for (int i = 0; i < m; ++i) {
         int u, v, w;
         cin >> u >> v >> w;
-        dij.add_edge(u, v, w);
+        dij.ad(u, v, w);
         // 无向图att
     }
 
@@ -1465,7 +1477,7 @@ struct Bellman_Ford {
 
     Bellman_Ford(int n_) : n(n_), dist(n_ + 1) {}
 
-    void add_edge(int u, int v, i64 w) {
+    void ad(int u, int v, i64 w) {
         edges.emplace_back(u, v, w);
     }
 
@@ -1476,15 +1488,15 @@ struct Bellman_Ford {
 
         // 核心：进行 n-1 轮松弛
         for (int i = 1; i < n; ++i) {
-            bool updated = false;
+            bool upd = false;
             for (const auto& edge : edges) {
                 auto [u, v, w] = edge;
                 if (dist[u] != linf && dist[v] > dist[u] + w) {
                     dist[v] = dist[u] + w;
-                    updated = true;
+                    upd = true;
                 }
             }
-            if (!updated) break;
+            if (!upd) break;
         }
 
         // 检测负权环：进行第 n 轮检查
