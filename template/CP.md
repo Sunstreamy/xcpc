@@ -25,7 +25,6 @@
       - [lucas定理](#lucas定理)
       - [质因数分解](#质因数分解)
       - [杨辉三角（精确计算）](#杨辉三角精确计算)
-    - [容斥原理](#容斥原理)
     - [常见结论](#常见结论)
   - [图论](#图论)
     - [Dijkstra](#dijkstra)
@@ -1202,8 +1201,6 @@ cout << C[n][m] << endl;
 ```
 
 
-### 容斥原理 
-
 ### 常见结论
 *   **曲棍球棒恒等式：**
 
@@ -1211,6 +1208,9 @@ $$\begin{cases}
 \sum_{i = r}^{n} C_{i}^{r} = C_{r}^{r} + C_{r + 1}^{r} + \cdots + C_{n}^{r} = C_{n + 1}^{r + 1} & \text{(形式一: 下标固定)} \\
 \sum_{i = k}^{n} C_{i}^{i - k} = C_{k}^{0} + C_{k + 1}^{1} + \cdots + C_{n}^{n - k} = C_{n + 1}^{k + 1} & \text{(形式二: 差值固定)}
 \end{cases}$$
+
+*   **容斥原理：**
+    $$\left|\bigcup_{i = 1}^{N} P_{i}\right| = \sum_{i}\left|P_{i}\right| - \sum_{i < j}\left|P_{i} \cap P_{j}\right| + \sum_{i < j < k}\left|P_{i} \cap P_{j} \cap P_{k}\right| - \cdots + (-1)^{N - 1}\left|P_{1} \cap \cdots \cap P_{N}\right| \quad \text{(求并集大小：至少满足一个性质)}$$
 
 
 
