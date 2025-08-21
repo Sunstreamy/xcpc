@@ -26,7 +26,8 @@ struct Bellman_Ford {
         edges.push_back({u, v, r, c});
     }
 
-    bool run(int st, int initval) {
+    bool run(int st, f64 initval) {
+        // 从S出发可以达到的位置
         fill(dist.begin(), dist.end(), -dinf);
         dist[st] = initval;
         for (int i = 1; i < n; ++i) {

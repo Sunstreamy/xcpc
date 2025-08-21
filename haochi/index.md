@@ -82,7 +82,8 @@
 
 
 ## 数论 
-*   [小红的双排列期望](./Number_Theory/%E5%B0%8F%E7%BA%A2%E7%9A%84%E5%8F%8C%E6%8E%92%E5%88%97%E6%9C%9F%E6%9C%9B_easy.cpp)
+*   [小红的双排列期望](./Number_Theory/%E5%B0%8F%E7%BA%A2%E7%9A%84%E5%8F%8C%E6%8E%92%E5%88%97%E6%9C%9F%E6%9C%9jB_easy.cpp)
+*   [https://www.matiji.net/exam/brushquestion/59/4693/305EE97B0D5E361DE6A28CD18C929AF0](./Number_Theory/4.cpp)
 
 ## 几何
 
