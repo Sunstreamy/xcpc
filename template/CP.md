@@ -1069,7 +1069,7 @@ i64 hmul(i64 a, i64 b) {
     return (i128)a * b % mod;
 }
 
-i64 hmul(i64 a, i64 b, i64 mod) {
+i64 hmul(i64 a, i64 b) {
     i64 ans= 0;
     a %= mod;
     while (b) {
@@ -1082,17 +1082,17 @@ i64 hmul(i64 a, i64 b, i64 mod) {
     return ans;
 }
 
-i64 qpow(i64 n, i64 k,i64 mod) {
-    i64 r = 1;
+i64 qpow(i64 n, i64 k) {
+    i64 ans = 1;
     n %= mod;
     while (k) {
         if (k & 1) {
-            r = r * n % mod;
+            ans = ans * n % mod;
         }
         n = n * n % mod;
-        k >>= 1;
+        k >> 1;
     }
-    return r;
+    return ans;
 }
 ```
 
@@ -1121,13 +1121,12 @@ i64 fac[maxm], invfac[maxm];
 
 void init(int n) {
     fac[0] = 1;
-    invfac[0] = 1;
     for (int i = 1; i <= n; ++i) {
         fac[i] = (fac[i - 1] * i) % mod;
     }
     // 计算最大阶乘的逆元，然后递推
-    invfac[n] = inv(fac[n], mod);
-    for (int i = n - 1; i >= 1; --i) {
+    invfac[n] = inv(fac[n]);
+    for (int i = n - 1; i >= 0; --i) {
         invfac[i] = (invfac[i + 1] * (i + 1)) % mod;
     }
 }
