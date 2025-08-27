@@ -17,7 +17,26 @@ constexpr int MOD[] = {998244353, 1000000007};
 //------------------------------------------------------------------
 
 void solve() {
-    
+    int n;
+    cin >> n;
+    vector<i64> g(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> g[i];
+    }
+    sort(g.begin(), g.end());
+
+    i64 ans = 0;
+    if (n % 2 == 1) {
+        ans += g[0];
+        for (int i = 2; i < n; i += 2) {
+            ans += g[i];
+        }
+    } else {
+        for (int i = 1; i < n; i += 2) {
+            ans += g[i];
+        }
+    }
+    cout << ans << '\n';
 }
 
 int main() {
