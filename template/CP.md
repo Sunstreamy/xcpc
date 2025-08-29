@@ -1090,7 +1090,7 @@ i64 qpow(i64 n, i64 k) {
             ans = ans * n % mod;
         }
         n = n * n % mod;
-        k >> 1;
+        k >>= 1;
     }
     return ans;
 }

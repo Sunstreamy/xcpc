@@ -20,6 +20,34 @@ void solve() {
     int n;
     cin >> n;
     vector<i64> a(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i];
+    }
+    vector<i64> mxl(n);
+    vector<i64> mxr(n);
+
+    i64 curmx = -1e18;
+    i64 fmx = -1e18;
+
+    for (int i = 0; i < n; ++i) {
+        curmx = max(a[i], a[i] + curmx);
+        fmx = max(fmx, curmx);
+        mxl[i] = fmx;
+    }
+
+    curmx = -linf;
+    fmx = -linf;
+    for (int i = n - 1; i >= 0; --i) {
+        curmx = max(a[i], curmx + a[i]);
+        fmx = max(fmx, curmx);
+        mxr[i] = fmx;
+    }
+
+    i64 ans = -2 * linf;
+    for (int i = 0; i < n - 1; ++i) {
+        ans = max(ans, mxl[i] + mxr[i + 1]);
+    }
+    cout << ans<<'\n';
 }
 
 int main() {
