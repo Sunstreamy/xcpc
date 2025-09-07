@@ -782,7 +782,8 @@ struct BigInt {
 ### 进制转换
 
 ```cpp
-struct converter {
+//$$O(L^2 \cdot \log_b(a))$$
+struct Converter {
     // mp:  用于将字符（'0'-'9', 'a'-'z', 'a'-'z'）映射为对应的整数（0-61）。
     // mp2: 用于将整数（0-61）映射回对应的字符。
     vector<int> mp;
