@@ -17,17 +17,22 @@ constexpr int MOD[] = {998244353, 1000000007};
 //------------------------------------------------------------------
 
 void solve() {
-    
+    int n;
+    while (cin >> n) {
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= i; ++j) {
+                cout << j << " ";
+            }
+            cout << '\n';
+        }
+    }
 }
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int _;
-    cin >> _;
-    while (_--) 
-        solve();
+    solve();
 
     return 0;
 }
