@@ -25,6 +25,7 @@
       - [lucas定理](#lucas定理)
       - [质因数分解](#质因数分解)
       - [杨辉三角（精确计算）](#杨辉三角精确计算)
+    - [矩阵快速幂](#矩阵快速幂)
     - [常见结论](#常见结论)
   - [图论](#图论)
     - [Dijkstra](#dijkstra)
@@ -1198,6 +1199,69 @@ for (int i = 1; i <= n; i++) {
     }
 }
 cout << C[n][m] << endl;
+```
+### 矩阵快速幂
+
+```cpp
+struct Matrix {
+    int n;
+    vector<vector<i64>> mat;
+
+    Matrix(int n_) : n(n_), mat(n_, vector<i64>(n_, 0)) {}
+};
+
+Matrix operator*(const Matrix& a, const Matrix& b) {
+    Matrix c(a.n); 
+    for (int i = 0; i < a.n; i++) {
+        for (int j = 0; j < a.n; j++) {
+            for (int k = 0; k < a.n; k++) {
+                c.mat[i][j] = (c.mat[i][j] + a.mat[i][k] * b.mat[k][j]) % mod;
+            }
+        }
+    }
+    return c;
+}
+
+Matrix matrix_pow(Matrix base, i64 exp) {
+    Matrix res(base.n); 
+    for (int i = 0; i < base.n; i++) {
+        res.mat[i][i] = 1;
+    }
+
+    while (exp > 0) {
+        if (exp % 2 == 1) {
+            res = res * base;
+        }
+        base = base * base;
+        exp /= 2;
+    }
+    return res;
+}
+
+//usage
+void solve() {
+    int n;
+    i64 k;
+    cin >> n >> k;
+
+    Matrix base(n);
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> base.mat[i][j];
+        }
+    }
+
+    Matrix result = matrix_pow(base, k);
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << result.mat[i][j] << (j == n - 1 ? "" : " ");
+        }
+        cout << '\n';
+    }
+}
+
 ```
 
 
