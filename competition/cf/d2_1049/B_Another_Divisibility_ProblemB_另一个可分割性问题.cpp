@@ -17,7 +17,9 @@ constexpr int MOD[] = {998244353, 1000000007};
 //------------------------------------------------------------------
 
 void solve() {
-    
+    i64 x;
+    cin >> x;
+    cout << 2 * x << '\n';
 }
 
 int main() {
@@ -26,7 +28,8 @@ int main() {
 
     int _;
     cin >> _;
-    while (_--) solve();
+    while (_--) 
+        solve();
 
     return 0;
 }
