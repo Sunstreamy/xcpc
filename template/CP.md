@@ -11,6 +11,7 @@
     - [进制转换](#进制转换)
     - [离散化](#离散化)
   - [数据结构](#数据结构)
+    - [ST表](#st表)
     - [并查集 (DSU) - 路径压缩 + 按秩序合并](#并查集-dsu---路径压缩--按秩序合并)
     - [树状数组](#树状数组)
   - [字符串算法](#字符串算法)
@@ -888,6 +889,64 @@ struct Disc {
 
 ## 数据结构
 
+### ST表
+
+```cpp
+template <typename T>
+T myGcd(T a, T b) {
+    return b == T(0) ? a : myGcd(b, a % b);
+}
+
+template <typename T>
+struct ST {
+    const int n, k;
+    vector<vector<T>> Max, Min, Gcd;
+
+    ST(int size) : n(size), k(size > 0 ? __lg(size) : 0) {
+        Max.resize(k + 1, vector<T>(n + 1));
+        Min.resize(k + 1, vector<T>(n + 1));
+        Gcd.resize(k + 1, vector<T>(n + 1));
+    }
+
+    void init(const vector<T>& arr) {
+        for (int i = 1; i <= n; ++i) {
+            Max[0][i] = arr[i];
+            Min[0][i] = arr[i];
+            Gcd[0][i] = arr[i];
+        }
+
+        for (int i = 0; i < k; ++i) {
+            int t = (1 << i);
+            for (int j = 1; j + (t << 1) - 1 <= n; ++j) {
+                Max[i + 1][j] = max(Max[i][j], Max[i][j + t]);
+                Min[i + 1][j] = min(Min[i][j], Min[i][j + t]);
+                // 调用模板化的 gcd 函数
+                Gcd[i + 1][j] = myGcd(Gcd[i][j], Gcd[i][j + t]);
+            }
+        }
+    }
+
+    // 5. 查询函数的返回值变为 T
+    T getMax(int l, int r) {
+        if (l > r) swap(l, r);
+        int len_log = __lg(r - l + 1);
+        return max(Max[len_log][l], Max[len_log][r - (1 << len_log) + 1]);
+    }
+
+    T getMin(int l, int r) {
+        if (l > r) swap(l, r);
+        int len_log = __lg(r - l + 1);
+        return min(Min[len_log][l], Min[len_log][r - (1 << len_log) + 1]);
+    }
+
+    T getGcd(int l, int r) {
+        if (l > r) swap(l, r);
+        int len_log = __lg(r - l + 1);
+        return myGcd(Gcd[len_log][l], Gcd[len_log][r - (1 << len_log) + 1]);
+    }
+};
+```
+
 ### 并查集 (DSU) - 路径压缩 + 按秩序合并
 
 ```cpp
@@ -982,6 +1041,7 @@ struct Fenwick {
 
 
 ## 数论
+
 
 ### 质因子分解
 ```cpp
