@@ -1179,7 +1179,6 @@ i64 inv(i64 a) {
     return qpow(a, mod- 2);
 }
 
-//
 ```
 
 ### 组合数
@@ -1192,7 +1191,7 @@ i64 inv(i64 a) {
 [逆元](#逆元)
 
 ```cpp
-i64 fac[maxm], invfac[maxm];
+i64 fac[Maxm], invfac[Maxm];
 
 void init(int n) {
     fac[0] = 1;
