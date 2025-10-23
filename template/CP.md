@@ -817,7 +817,7 @@ struct BigInt {
 ### 进制转换
 
 ```cpp
-//$$O(L^2 \cdot \log_b(a))$$
+//O(N² * log_b(a)),其中 N 是输入字符串的长度，a 是原始进制，b 是目标进制。
 struct Converter {
     // mp:  用于将字符（'0'-'9', 'a'-'z', 'a'-'z'）映射为对应的整数（0-61）。
     // mp2: 用于将整数（0-61）映射回对应的字符。
@@ -899,8 +899,6 @@ struct Disc {
     }
 
     int get_val(int id) const {
-        // 在竞赛中，可以不加 assert 以追求极致性能，但加上更安全
-        // assert(id >= 1 && id <= values.size());
         return values[id - 1];
     }
     
@@ -1647,5 +1645,3 @@ struct Bellman_Ford {
 
 ## 动态规划
 <!-- 在这里开始添加你的“动态规划”模板，比如背包DP、区间DP、插头DP等 -->
-
-jk
