@@ -2,7 +2,7 @@
 .vscode/
 
 test/
-
+contest/
 
 # 忽略编译产物文件夹
 build/
