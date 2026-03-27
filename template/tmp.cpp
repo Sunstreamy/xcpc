@@ -15,6 +15,8 @@ constexpr db Dinf = 1e18;
 constexpr int Maxm = 400005;
 constexpr int Maxn = 200005;
 constexpr int MOD[] = {998244353, 1000000007};
+
+#define endl '\n'
 //------------------------------------------------------------------
 
 void solve() {
