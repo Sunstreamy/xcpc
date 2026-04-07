@@ -9,12 +9,12 @@ using db = double;
 using ldb = long double;
 using b20 = bitset<20>;
 
-constexpr int Inf = 0x3f3f3f3f;
-constexpr ll Linf = 0x3f3f3f3f3f3f3f3fLL;
-constexpr db Dinf = 1e18;
-constexpr int Maxm = 400005;
-constexpr int Maxn = 200005;
-constexpr int MOD[] = {998244353, 1000000007};
+const int Inf = 0x3f3f3f3f;
+const ll Linf = 0x3f3f3f3f3f3f3f3fLL;
+const db Dinf = 1e18;
+const int Maxm = 400005;
+const int Maxn = 200005;
+const int MOD[] = {998244353, 1000000007};
 
 #define endl '\n'
 //------------------------------------------------------------------
