@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
-using i64 = long long;
-constexpr int MOD[] = {998244353, 1000000007};
+using ll= long long;
+const int MOD[] = {998244353, 1000000007};
 
 void solve() {
     
