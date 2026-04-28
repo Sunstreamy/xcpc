@@ -6,6 +6,7 @@ const int MOD[] = {998244353, 1000000007};
 const int Inf = 0x3f3f3f3f;
 const ll Linf = 0x3f3f3f3f3f3f3f3fLL;
 
+#define endl '\n'
 void solve() {
 
 }
