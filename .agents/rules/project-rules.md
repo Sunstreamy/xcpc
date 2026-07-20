@@ -111,7 +111,7 @@ When providing complete code:
     
     - If the problem has multiple test cases, keep `cin >> _; while (_--) solve();`.
         
-    - If the problem has a single test case, remind me that the template reads the number of test cases by default and may need to be changed to a direct `solve();`.
+    - If the problem has a single test case, directly modify the main function to just call solve(); and remove the cin >> _; while (_--) logic.
         
 
 ## Code Review Rules
